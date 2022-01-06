@@ -1,0 +1,5 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/dev/modman'
+tsc -p tsconfig.json
+make: Leaving directory '/home/dev/modman'
+ 
