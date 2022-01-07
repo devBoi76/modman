@@ -63,7 +63,7 @@ function ask_user(text, options, default_option) {
 }
 exports.ask_user = ask_user;
 function print_error(text) {
-    console.log(`${exports.colors.BgRedBright}${exports.colors.FgBlack}[ERROR]${exports.colors.Reset} ${text}`);
+    console.log(`${exports.colors.BgRedBright}${exports.colors.FgBlack}[ERROR]${exports.colors.Reset}${exports.colors.Bright} ${text}${exports.colors.Reset}`);
 }
 exports.print_error = print_error;
 function print_note(text) {
@@ -76,11 +76,11 @@ function print_release(release, known_packages) {
         console.log(`[Dependency]: ${a.name} version ${release.version} for minecraft ${release.game_version}`);
         return;
     }
-    console.log(`[Release]: ${a.name} version ${release.version} for minecraft ${release.game_version}`);
+    console.log(`${exports.colors.BgGreen}${exports.colors.FgBlack}[Release]${exports.colors.Reset} ${a.name} version ${release.version} for minecraft ${release.game_version}`);
 }
 exports.print_release = print_release;
 function print_package(pkg) {
-    console.log(`[Package] ${pkg.name} - ${pkg.description}`);
+    console.log(`${exports.colors.BgGreen}${exports.colors.FgBlack}[Package]${exports.colors.Reset} ${pkg.name} - ${pkg.description}`);
     console.log(`| Releases:`);
     for (const release of pkg.releases) {
         console.log(`|> Version ${release.version} for Minecraft ${release.game_version}`);
