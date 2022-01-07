@@ -56,7 +56,7 @@ function print_package(pkg) {
     console.log('\n');
 }
 exports.print_package = print_package;
-exports.possible_options = ["install", "sync", "remove", "search", "list", "help", "add_repo", "remove_repo", "create_package", "create_release", "upload_release"];
+exports.possible_options = ["install", "sync", "search", "list", "help", "add_repo", "remove_repo", "create_package", "create_release", "upload_release"];
 exports.possible_args = {
     VERSION: "--version",
     INSTALL_METHOD: "--method" // packageBehavior

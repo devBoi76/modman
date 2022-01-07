@@ -34,9 +34,9 @@ export function read_pkg_json(): Array<Package> {
         file = fs.readFileSync("./.modman/pkg_idx.json", "utf8");
         json = JSON.parse(file);
     } catch (err) {
-        console.log("Could not read ./.modman/pkg_idx.json");
-        console.log(err);
-        throw("Could not read ./.modman/pkg_idx.json");
+        util.print_error("Could not read ./.modman/pkg_idx.json");
+        util.print_note("Perhaps you haven't added any repositories. Consider adding one with `modman add_repo <repository url>`");
+        process.exit();
     }
     return json;
 }
