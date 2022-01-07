@@ -52,10 +52,12 @@ export function get_sync(uri: string) {
 export function get_help() {
 	console.log("[POSSIBLE COMMANDS]:");
 	console.log("`modman install <mod names>`");
+	console.log("`modman search <mod name>` - search for a mod from known packages");
+	console.log("`modman list` - list all known packages");
 	console.log("`modman add_repos <urls>` - add a mod repository (or multiple)");
 	console.log("`modman remove_repo <url>` - remove a mod repository");
 	console.log("`modman sync` - update the mod index with the added repositories");
-	console.log("`modman help` - display this message");
+	console.log("`modman help` - display this message\n");
 	console.log("[POSSIBLE ARGUMENTS]:");
 	console.log("`modman install --version <minecraft version>` - download the package for a specified version");
 }

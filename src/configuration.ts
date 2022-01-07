@@ -66,6 +66,11 @@ function create_template_idx_file() {
 export function ensure_file() {
 	try {
 		try {
+			fs.accessSync("./.modman");
+		} catch (err) {
+			fs.mkdirSync("./.modman");
+		}
+		try {
 			fs.accessSync("./.modman/conf.json");
 		} catch (err) {
 			// console.error(err);
