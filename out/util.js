@@ -53,6 +53,7 @@ function print_package(pkg) {
     for (const release of pkg.releases) {
         console.log(`|> Version ${release.version} for Minecraft ${release.game_version}`);
     }
+    console.log('\n');
 }
 exports.print_package = print_package;
 exports.possible_options = ["install", "sync", "remove", "search", "list", "help", "add_repo", "remove_repo", "create_package", "create_release", "upload_release"];

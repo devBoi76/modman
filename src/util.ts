@@ -15,7 +15,7 @@ export function print_note(text: string) {
 	console.log(`[NOTE] ${text}`);
 }
 
-export function print_release(release: packages.Release, known_packages: JSON): void {
+export function print_release(release: packages.Release, known_packages: Array<packages.Package>): void {
     let a = packages.id_to_object(release.parent_package_id, known_packages);
 	if(release.is_dependency){
 		console.log(`[Dependency]: ${a.name} version ${release.version} for minecraft ${release.game_version}`)
@@ -30,6 +30,7 @@ export function print_package(pkg: packages.Package) {
 	for(const release of pkg.releases) {
 		console.log(`|> Version ${release.version} for Minecraft ${release.game_version}`);
 	}
+	console.log('\n');
 }
 
 export const possible_options = ["install", "sync", "remove", "search", "list", "help", "add_repo", "remove_repo", "create_package", "create_release", "upload_release"];

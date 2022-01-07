@@ -26,10 +26,10 @@ export class Package {
     repository_id: number;
 }
 
-export function read_pkg_json() {
+export function read_pkg_json(): Array<Package> {
 
     let file: string = undefined;
-    let json: JSON = undefined;
+    let json: Array<Package> = undefined;
     try {
         file = fs.readFileSync("./.modman/pkg_idx.json", "utf8");
         json = JSON.parse(file);

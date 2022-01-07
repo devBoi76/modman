@@ -45,6 +45,7 @@ export function remove_repo(repo: string) {
 }
 
 export function sync_all_repos() {
+    util.print_note("Synchronizing with all known repositories..");
     let config = JSON.parse(fs.readFileSync("./.modman/conf.json", {encoding:'utf8', flag:'r'}));
     let indexes_to_sync: Array<Array<packages.Package>> = [];
     for(const repo of config.repos) {
@@ -52,6 +53,7 @@ export function sync_all_repos() {
     }
     let unified = packages.unify_indexes(indexes_to_sync);
     fs.writeFileSync("./.modman/pkg_idx.json", JSON.stringify(unified));
+    util.print_note("Done!")
 }
 
 export function create_package(repo: string, name: string, description: string) {

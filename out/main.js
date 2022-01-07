@@ -37,6 +37,7 @@ function main() {
     return __awaiter(this, void 0, void 0, function* () {
         //ensure that a file at ./modman/conf.js is accesible
         configuration.ensure_file();
+        // api.sync_all_repos()
         // parse arguments
         const args = process.argv;
         const options = args.slice(2);
@@ -152,6 +153,16 @@ function main() {
                 for (const pkg of desired_pkg_objects) {
                     util.print_package(pkg);
                 }
+                break;
+            }
+            case "list": {
+                let known_packages = packages.read_pkg_json();
+                util.print_note(`${known_packages.length} packages available`);
+                util.print_note("To update your repositories, type `modman sync`\n");
+                for (const pkg of known_packages) {
+                    util.print_package(pkg);
+                }
+                break;
             }
         }
     });

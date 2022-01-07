@@ -64,6 +64,7 @@ function remove_repo(repo) {
 }
 exports.remove_repo = remove_repo;
 function sync_all_repos() {
+    util.print_note("Synchronizing with all known repositories..");
     let config = JSON.parse(fs.readFileSync("./.modman/conf.json", { encoding: 'utf8', flag: 'r' }));
     let indexes_to_sync = [];
     for (const repo of config.repos) {
@@ -71,6 +72,7 @@ function sync_all_repos() {
     }
     let unified = packages.unify_indexes(indexes_to_sync);
     fs.writeFileSync("./.modman/pkg_idx.json", JSON.stringify(unified));
+    util.print_note("Done!");
 }
 exports.sync_all_repos = sync_all_repos;
 function create_package(repo, name, description) {
