@@ -19,7 +19,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.get_help = exports.get_sync = exports.arr_eq = exports.possible_args = exports.possible_options = exports.print_release = exports.print_note = exports.print_error = exports.ask_user = void 0;
+exports.similarity = exports.get_help = exports.get_sync = exports.arr_eq = exports.possible_args = exports.possible_options = exports.print_package = exports.print_release = exports.print_note = exports.print_error = exports.ask_user = void 0;
 let prmpt = require("prompt-sync")({ sigint: true });
 const packages = __importStar(require("./package"));
 // var XMLHttpRequest = require("xmlhttprequest");
@@ -47,7 +47,15 @@ function print_release(release, known_packages) {
     console.log(`[Release]: ${a.name} version ${release.version} for minecraft ${release.game_version}`);
 }
 exports.print_release = print_release;
-exports.possible_options = ["install", "sync", "remove", "list", "help", "add_repo", "remove_repo", "create_package", "create_release", "upload_release"];
+function print_package(pkg) {
+    console.log(`[Package] ${pkg.name} - ${pkg.description}`);
+    console.log(`| Releases:`);
+    for (const release of pkg.releases) {
+        console.log(`|> Version ${release.version} for Minecraft ${release.game_version}`);
+    }
+}
+exports.print_package = print_package;
+exports.possible_options = ["install", "sync", "remove", "search", "list", "help", "add_repo", "remove_repo", "create_package", "create_release", "upload_release"];
 exports.possible_args = {
     VERSION: "--version",
     INSTALL_METHOD: "--method" // packageBehavior
@@ -74,4 +82,42 @@ function get_help() {
     console.log("`modman install --version <minecraft version>` - download the package for a specified version");
 }
 exports.get_help = get_help;
+function similarity(s1, s2) {
+    let longer = s1;
+    let shorter = s2;
+    if (s1.length < s2.length) {
+        longer = s2;
+        shorter = s1;
+    }
+    let longer_length = longer.length;
+    if (longer_length == 0) {
+        return 1.0;
+    }
+    return (longer_length - editDistance(longer, shorter)) / longer_length;
+}
+exports.similarity = similarity;
+function editDistance(s1, s2) {
+    s1 = s1.toLowerCase();
+    s2 = s2.toLowerCase();
+    var costs = new Array();
+    for (var i = 0; i <= s1.length; i++) {
+        var lastValue = i;
+        for (var j = 0; j <= s2.length; j++) {
+            if (i == 0)
+                costs[j] = j;
+            else {
+                if (j > 0) {
+                    var newValue = costs[j - 1];
+                    if (s1.charAt(i - 1) != s2.charAt(j - 1))
+                        newValue = Math.min(Math.min(newValue, lastValue), costs[j]) + 1;
+                    costs[j - 1] = lastValue;
+                    lastValue = newValue;
+                }
+            }
+        }
+        if (i > 0)
+            costs[s2.length] = lastValue;
+    }
+    return costs[s2.length];
+}
 //# sourceMappingURL=util.js.map

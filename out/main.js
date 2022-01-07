@@ -30,14 +30,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const util = __importStar(require("./util"));
-const program = __importStar(require("./program"));
 const packages = __importStar(require("./package"));
 const configuration = __importStar(require("./configuration"));
 const api = __importStar(require("./api"));
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         //ensure that a file at ./modman/conf.js is accesible
-        program.ensure_file();
+        configuration.ensure_file();
         // parse arguments
         const args = process.argv;
         const options = args.slice(2);
@@ -57,15 +56,15 @@ function main() {
         // console.log(parsed_args);
         // console.log(config);
         switch (parsed_args.operation) {
-            case "install":
+            case "install": {
                 console.log("install");
-                if (parsed_args.pkg_names.length == 0) {
+                if (parsed_args.words.length == 0) {
                     util.print_error("No packages to install");
-                    util.print_note("example usage is `./main.js JEI`");
+                    util.print_note("example usage is `./main.js install JEI`");
                     process.exit();
                 }
                 let known_packages = packages.read_pkg_json();
-                let desired_pkg_names = parsed_args.pkg_names;
+                let desired_pkg_names = parsed_args.words;
                 let desired_pkg_objects = packages.names_to_objects(desired_pkg_names, known_packages); // Set
                 let desired_releases = new Set();
                 for (const entry of desired_pkg_objects.entries()) {
@@ -88,50 +87,72 @@ function main() {
                     api.download_release(value, known_packages);
                 });
                 break;
-            case "sync":
+            }
+            case "sync": {
                 console.log("sync");
                 api.sync_all_repos();
                 break;
-            case "add_repo":
-                if (parsed_args.pkg_names.length == 0) {
+            }
+            case "add_repo": {
+                if (parsed_args.words.length == 0) {
                     util.print_error("No repositories to add specified");
                     process.exit();
                 }
-                api.add_repos(parsed_args.pkg_names);
+                api.add_repos(parsed_args.words);
                 break;
-            case "remove_repo":
-                if (parsed_args.pkg_names.length != 1) {
+            }
+            case "remove_repo": {
+                if (parsed_args.words.length != 1) {
                     util.print_error("Please specify exactly one repository to remove");
                     process.exit();
                 }
-                api.remove_repo(parsed_args.pkg_names[0]);
-            case "create_package":
-                if (parsed_args.pkg_names.length != 3) {
+                api.remove_repo(parsed_args.words[0]);
+                break;
+            }
+            case "create_package": {
+                if (parsed_args.words.length != 3) {
                     util.print_error("Please provide a name and description for the package in the following format:");
                     util.print_error("`create_package <repository_url> <name> <description>`");
                     process.exit();
                 }
-                api.create_package(parsed_args.pkg_names[0], parsed_args.pkg_names[1], parsed_args.pkg_names[2]);
+                api.create_package(parsed_args.words[0], parsed_args.words[1], parsed_args.words[2]);
                 break;
-            case "create_release":
-                if (parsed_args.pkg_names.length != 5) {
+            }
+            case "create_release": {
+                if (parsed_args.words.length != 5) {
                     util.print_error("Please provide a name and description for the release in the following format:");
                     util.print_error("`create_package <repository_url> <release_version> <game_version> <dependencies> <repository_package_id>`");
                     process.exit();
                 }
-                api.create_release(parsed_args.pkg_names[0], parsed_args.pkg_names[1], parsed_args.pkg_names[2], parsed_args.pkg_names[3], parsed_args.pkg_names[4]);
+                api.create_release(parsed_args.words[0], parsed_args.words[1], parsed_args.words[2], parsed_args.words[3], parsed_args.words[4]);
                 break;
-            case "upload_release":
-                if (parsed_args.pkg_names.length != 4) {
+            }
+            case "upload_release": {
+                if (parsed_args.words.length != 4) {
                     util.print_error("Please provide a name and description for the release file in the following format:");
                     util.print_error("`create_package <repository_url> <file_path> <repository_package_id> <release_id>`");
                     process.exit();
                 }
-                api.upload_release_file(parsed_args.pkg_names[0], parsed_args.pkg_names[1], parsed_args.pkg_names[2], parsed_args.pkg_names[3]);
+                api.upload_release_file(parsed_args.words[0], parsed_args.words[1], parsed_args.words[2], parsed_args.words[3]);
                 break;
-            case "help":
+            }
+            case "help": {
                 util.get_help();
                 break;
+            }
+            case "search": {
+                if (parsed_args.words.length == 0) {
+                    util.print_error("No packages to search for");
+                    util.print_note("example usage is `./main.js search JEI`");
+                    process.exit();
+                }
+                let known_packages = packages.read_pkg_json();
+                let desired_pkg_names = parsed_args.words;
+                let desired_pkg_objects = packages.names_to_objects(desired_pkg_names, known_packages);
+                for (const pkg of desired_pkg_objects) {
+                    util.print_package(pkg);
+                }
+            }
         }
     });
 }

@@ -45,11 +45,21 @@ export function names_to_objects(package_names: Array<string>, known_packages: a
     let objects = new Set<Package>(); // we can use Array.filter() ! IDK about the performance though
     
     for(const name of package_names) {
-        let pkg = known_packages.filter(pkg => pkg.name == name)[0]
+        let pkg = known_packages.filter(pkg => pkg.name.toLowerCase() == name.toLowerCase())[0]
         if(pkg){
             objects.add(pkg);
         } else {
-            util.print_error(`Package ${name} not found`);
+            util.print_error(`Package "${name}" not found`);
+            let best_match = "";
+            let k_names = known_packages.map( (value) => { return value.name});
+            for(const name_b of k_names) {
+                if(util.similarity(name, name_b) > util.similarity(best_match, name_b)) {
+                    best_match = name_b;
+                }
+            }
+            if (util.similarity(name, best_match) > 0.6) {
+                util.print_note(`Did you mean "${best_match}"?`);
+            }
             process.exit();
         }
     }
