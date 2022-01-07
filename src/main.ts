@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 import * as util from "./util";
-import * as program from "./program";
 import * as packages from "./package";
 import * as configuration from "./configuration";
 import * as api from "./api";

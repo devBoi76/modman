@@ -56,9 +56,9 @@ function names_to_objects(package_names, known_packages) {
         else {
             util.print_error(`Package "${name}" not found`);
             let best_match = "";
-            let k_names = known_packages.map((value) => { return value.name; });
+            let k_names = known_packages.map((value) => { return value.name.toLowerCase(); });
             for (const name_b of k_names) {
-                if (util.similarity(name, name_b) > util.similarity(best_match, name_b)) {
+                if (util.similarity(name.toLowerCase(), name_b) > util.similarity(best_match, name_b)) {
                     best_match = name_b;
                 }
             }
