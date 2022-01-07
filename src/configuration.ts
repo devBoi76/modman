@@ -50,8 +50,7 @@ export function parse_args(options: Array<string>) {
 function create_template_file() {
 	// const writer = fs.createWriteStream("./.modman/conf.json", {flags: "w"});
 	const default_json = {
-		version: 0.1,
-		fpath: fs.realpath("./.modman/conf.json", ()=>{}),
+		game_version: "1.16",
 		repos: []
 	};
 	fs.writeFileSync("./.modman/conf.json", JSON.stringify(default_json));

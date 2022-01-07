@@ -33,7 +33,7 @@ export function print_package(pkg: packages.Package) {
 	console.log('\n');
 }
 
-export const possible_options = ["install", "sync", "remove", "search", "list", "help", "add_repo", "remove_repo", "create_package", "create_release", "upload_release"];
+export const possible_options = ["install", "sync", "search", "list", "help", "add_repo", "remove_repo", "create_package", "create_release", "upload_release"];
 export const possible_args = {
 	VERSION: "--version",
 	INSTALL_METHOD: "--method" // packageBehavior
