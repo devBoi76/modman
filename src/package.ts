@@ -45,7 +45,13 @@ export function names_to_objects(package_names: Array<string>, known_packages: a
     let objects = new Set<Package>(); // we can use Array.filter() ! IDK about the performance though
     
     for(const name of package_names) {
-        objects.add(known_packages.filter(pkg => pkg.name == name)[0]);
+        let pkg = known_packages.filter(pkg => pkg.name == name)[0]
+        if(pkg){
+            objects.add(pkg);
+        } else {
+            util.print_error(`Package ${name} not found`);
+            process.exit();
+        }
     }
     return objects;
 }

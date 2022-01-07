@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Thu Jan  6 16:37:39 2022
+# Make data base, printed on Fri Jan  7 16:57:40 2022
 
 # Variables
 
@@ -17,11 +17,9 @@ GDK_BACKEND = x11
 # environment
 LC_ALL = C
 # environment
-NO_AT_BRIDGE = 1
-# environment
 GTK_RC_FILES = /etc/gtk/gtkrc:/home/jan/.gtkrc:/home/jan/.config/gtkrc
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-66d627cd-4795-4133-b165-78a89a182b88.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-9d2fbac5-a815-41d1-a19b-7eefc2d1d182.sock
 # environment
 MANDATORY_PATH = /usr/share/gconf/plasma.mandatory.path
 # environment
@@ -81,7 +79,7 @@ PAM_KWALLET5_LOGIN = /run/user/1000/kwallet5.socket
 # environment
 MFLAGS = -pqrR
 # environment
-SSH_AUTH_SOCK = /tmp/ssh-7auMRcFqiDqv/agent.4072
+SSH_AUTH_SOCK = /tmp/ssh-189JcAMQLB6k/agent.1259
 # default
 .SHELLFLAGS := -c
 # environment
@@ -101,13 +99,13 @@ MAKEFILE_LIST := Makefile
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_PID = 24701
+VSCODE_PID = 11029
 # environment
 XDG_SESSION_TYPE = x11
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # environment
-SESSION_MANAGER = local/komp:@/tmp/.ICE-unix/4359,unix/komp:/tmp/.ICE-unix/4359
+SESSION_MANAGER = local/komp:@/tmp/.ICE-unix/1479,unix/komp:/tmp/.ICE-unix/1479
 # automatic
 *F = $(notdir $*)
 # environment
@@ -191,7 +189,7 @@ MAKE_VERSION := 4.3
 # environment
 LC_MEASUREMENT = pl_PL.UTF-8
 # environment
-SSH_AGENT_PID = 4152
+SSH_AGENT_PID = 1340
 # environment
 _ = /usr/share/codium/codium
 # environment
@@ -237,7 +235,7 @@ KDE_FULL_SESSION = true
 # environment
 LC_IDENTIFICATION = pl_PL.UTF-8
 # variable set hash-table stats:
-# Load=112/1024=11%, Rehash=0, Collisions=6/142=4%
+# Load=111/1024=11%, Rehash=0, Collisions=6/141=4%
 
 # Pattern-specific Variable Values
 
@@ -245,11 +243,11 @@ LC_IDENTIFICATION = pl_PL.UTF-8
 
 # Directories
 
-# src (device 66307, inode 11813108): 8 files, no impossibilities.
-# . (device 66307, inode 11812953): 14 files, no impossibilities.
-# out (device 66307, inode 11813107): 14 files, no impossibilities.
+# src (device 66307, inode 11813229): 9 files, no impossibilities.
+# . (device 66307, inode 11812953): 18 files, no impossibilities.
+# out (device 66307, inode 11813110): 16 files, no impossibilities.
 
-# 36 files, no impossibilities in 3 directories.
+# 43 files, no impossibilities in 3 directories.
 
 # Implicit Rules
 
@@ -264,7 +262,19 @@ src/program.ts:
 #  File has not been updated.
 
 # Not a target:
+src/api.ts:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
 out/download.js:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+out/api.js.map:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -272,7 +282,7 @@ out/download.js:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-01-04 20:25:45.095008555
+#  Last modified 2022-01-07 16:43:30.833732496
 #  File has been updated.
 #  Successfully updated.
 
@@ -286,9 +296,10 @@ out/util.js.map:
 out/main.js.map:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
+ 
 #  File has not been updated.
 
-clean: out/configuration.js out/configuration.js.map out/download.js out/download.js.map out/main.js out/main.js.map out/package.js out/package.js.map out/program.js out/program.js.map out/util.js out/util.js.map
+clean: out/api.js out/api.js.map out/configuration.js out/configuration.js.map out/download.js out/download.js.map out/main.js out/main.js.map out/package.js out/package.js.map out/program.js out/program.js.map out/util.js out/util.js.map
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -302,13 +313,13 @@ out/util.js:
 #  File has not been updated.
 
 # Not a target:
-out/main.js:
+out/api.js:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 
 # Not a target:
-src/download.ts:
+out/main.js:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -335,7 +346,6 @@ src/util.ts:
 out/program.js.map:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
- 
 #  File has not been updated.
 
 # Not a target:
@@ -363,7 +373,7 @@ out/program.js:
 #  Modification time never checked.
 #  File has not been updated.
 
-build: src/configuration.ts src/download.ts src/main.ts src/package.ts src/program.ts src/util.ts
+build: src/api.ts src/configuration.ts src/global.ts src/main.ts src/package.ts src/program.ts src/util.ts
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -389,6 +399,12 @@ src/main.ts:
 #  File has not been updated.
 
 # Not a target:
+src/global.ts:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
 out/package.js:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
@@ -401,19 +417,19 @@ out/download.js.map:
 #  File has not been updated.
 
 # files hash-table stats:
-# Load=24/1024=2%, Rehash=0, Collisions=2/52=4%
+# Load=27/1024=3%, Rehash=0, Collisions=2/58=3%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 57 / storage = 706 B / avg = 12 B
-# current buf: size = 8162 B / used = 706 B / count = 57 / avg = 12 B
+# strcache buffers: 1 (0) / strings = 67 / storage = 830 B / avg = 12 B
+# current buf: size = 8162 B / used = 830 B / count = 67 / avg = 12 B
 
-# strcache performance: lookups = 69 / hit rate = 17%
+# strcache performance: lookups = 79 / hit rate = 15%
 # hash-table stats:
-# Load=57/8192=1%, Rehash=0, Collisions=0/69=0%
-# Finished Make data base on Thu Jan  6 16:37:39 2022
+# Load=67/8192=1%, Rehash=0, Collisions=0/79=0%
+# Finished Make data base on Fri Jan  7 16:57:40 2022
 
  
