@@ -85,4 +85,13 @@ export function ensure_file() {
 	} catch(err) {
 		console.error(err);
 	}
+};
+
+export function ensure_repos() {
+	let config = JSON.parse(fs.readFileSync("./.modman/conf.json", "utf8"));
+    if(config.repos.length == 0) {
+        util.print_error("You haven't added any repositories");
+        util.print_error("Add one with `modman add_repo <repository_url>`");
+        process.exit();
+    }
 }

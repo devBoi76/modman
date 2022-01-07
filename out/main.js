@@ -58,7 +58,6 @@ function main() {
         // console.log(config);
         switch (parsed_args.operation) {
             case "install": {
-                console.log("install");
                 if (parsed_args.words.length == 0) {
                     util.print_error("No packages to install");
                     util.print_note("example usage is `./main.js install JEI`");
@@ -90,7 +89,6 @@ function main() {
                 break;
             }
             case "sync": {
-                console.log("sync");
                 api.sync_all_repos();
                 break;
             }

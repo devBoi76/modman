@@ -20,7 +20,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.unify_indexes = exports.release_compatible = exports.get_desired_release = exports.id_to_object = exports.names_to_objects = exports.read_pkg_json = exports.Package = exports.Dependency = exports.Release = void 0;
-const fs = require("fs");
+const fs = __importStar(require("fs"));
+const configuration = __importStar(require("./configuration"));
 const util = __importStar(require("./util"));
 class Release {
 }
@@ -34,6 +35,7 @@ exports.Package = Package;
 function read_pkg_json() {
     let file = undefined;
     let json = undefined;
+    configuration.ensure_repos();
     try {
         file = fs.readFileSync("./.modman/pkg_idx.json", "utf8");
         json = JSON.parse(file);
@@ -42,6 +44,9 @@ function read_pkg_json() {
         util.print_error("Could not read ./.modman/pkg_idx.json");
         util.print_note("Perhaps you haven't added any repositories. Consider adding one with `modman add_repo <repository url>`");
         process.exit();
+    }
+    if (json.length == 0) {
+        util.print_error("No known packages found");
     }
     return json;
 }

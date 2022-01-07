@@ -1,5 +1,6 @@
 
-const fs = require("fs");
+import * as fs from "fs"
+import * as configuration from "./configuration"
 import * as util from "./util"
 
 export class Release {
@@ -30,6 +31,7 @@ export function read_pkg_json(): Array<Package> {
 
     let file: string = undefined;
     let json: Array<Package> = undefined;
+    configuration.ensure_repos();
     try {
         file = fs.readFileSync("./.modman/pkg_idx.json", "utf8");
         json = JSON.parse(file);
@@ -37,6 +39,9 @@ export function read_pkg_json(): Array<Package> {
         util.print_error("Could not read ./.modman/pkg_idx.json");
         util.print_note("Perhaps you haven't added any repositories. Consider adding one with `modman add_repo <repository url>`");
         process.exit();
+    }
+    if (json.length == 0) {
+        util.print_error("No known packages found")
     }
     return json;
 }

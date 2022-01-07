@@ -19,7 +19,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ensure_file = exports.parse_args = void 0;
+exports.ensure_repos = exports.ensure_file = exports.parse_args = void 0;
 const fs = __importStar(require("fs"));
 const util = __importStar(require("./util"));
 const api = __importStar(require("./api"));
@@ -109,4 +109,14 @@ function ensure_file() {
     }
 }
 exports.ensure_file = ensure_file;
+;
+function ensure_repos() {
+    let config = JSON.parse(fs.readFileSync("./.modman/conf.json", "utf8"));
+    if (config.repos.length == 0) {
+        util.print_error("You haven't added any repositories");
+        util.print_error("Add one with `modman add_repo <repository_url>`");
+        process.exit();
+    }
+}
+exports.ensure_repos = ensure_repos;
 //# sourceMappingURL=configuration.js.map

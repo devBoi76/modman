@@ -2,6 +2,7 @@ import * as http from "http"
 import * as util from "./util"
 import * as fs from "fs"
 import * as packages from "./package"
+import * as configuration from "./configuration"
 
 var FormData = require('form-data');
 
@@ -15,10 +16,17 @@ export function download_release(release: packages.Release, known_packages) {
 }
 
 export function get_available_packages(repo: string, as_json?: boolean) {
-    if(as_json === true) {
-        return JSON.parse(util.get_sync(repo + "/get_available_packages"))
+    let resp = util.get_sync(repo + "/get_available_packages");
+    if (resp == undefined) {
+        util.print_error(`Could not reach repository "${repo}"`);
+        util.print_note("Perhaps you made a typo or the repository is currently offline.");
+        process.exit();
     }
-    return util.get_sync(repo + "/get_available_packages")
+
+    if(as_json === true) {
+        return JSON.parse(resp);
+    }
+    return repo;
 }
 
 export function sync_packages_one_repo(repo: string) {
@@ -45,6 +53,7 @@ export function remove_repo(repo: string) {
 }
 
 export function sync_all_repos() {
+    configuration.ensure_repos();
     util.print_note("Synchronizing with all known repositories..");
     let config = JSON.parse(fs.readFileSync("./.modman/conf.json", {encoding:'utf8', flag:'r'}));
     let indexes_to_sync: Array<Array<packages.Package>> = [];

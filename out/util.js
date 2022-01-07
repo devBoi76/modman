@@ -19,11 +19,43 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.similarity = exports.get_help = exports.get_sync = exports.arr_eq = exports.possible_args = exports.possible_options = exports.print_package = exports.print_release = exports.print_note = exports.print_error = exports.ask_user = void 0;
+exports.similarity = exports.get_help = exports.get_sync = exports.arr_eq = exports.print_package = exports.print_release = exports.print_note = exports.print_error = exports.ask_user = exports.colors = exports.possible_args = exports.possible_options = void 0;
 let prmpt = require("prompt-sync")({ sigint: true });
 const packages = __importStar(require("./package"));
 // var XMLHttpRequest = require("xmlhttprequest");
 const xmlhpr = __importStar(require("xmlhttprequest"));
+exports.possible_options = ["install", "sync", "search", "list", "help", "add_repo", "remove_repo", "create_package", "create_release", "upload_release"];
+exports.possible_args = {
+    VERSION: "--version",
+    INSTALL_METHOD: "--method" // packageBehavior
+};
+exports.colors = {
+    Reset: "\x1b[0m",
+    Bright: "\x1b[1m",
+    Dim: "\x1b[2m",
+    Underscore: "\x1b[4m",
+    Blink: "\x1b[5m",
+    Reverse: "\x1b[7m",
+    Hidden: "\x1b[8m",
+    FgBlack: "\x1b[30m",
+    FgRed: "\x1b[31m",
+    FgRedBright: "\x1b[91m",
+    FgGreen: "\x1b[32m",
+    FgYellow: "\x1b[33m",
+    FgBlue: "\x1b[34m",
+    FgMagenta: "\x1b[35m",
+    FgCyan: "\x1b[36m",
+    FgWhite: "\x1b[37m",
+    BgBlack: "\x1b[40m",
+    BgRed: "\x1b[41m",
+    BgRedBright: "\x1b[101m",
+    BgGreen: "\x1b[42m",
+    BgYellow: "\x1b[43m",
+    BgBlue: "\x1b[44m",
+    BgMagenta: "\x1b[45m",
+    BgCyan: "\x1b[46m",
+    BgWhite: "\x1b[47m"
+};
 function ask_user(text, options, default_option) {
     const options_str = options.join("/").replace(default_option, default_option.toUpperCase());
     const prompt_str = text + " [" + options_str + "]: ";
@@ -31,11 +63,11 @@ function ask_user(text, options, default_option) {
 }
 exports.ask_user = ask_user;
 function print_error(text) {
-    console.log(`[ERROR] ${text}`);
+    console.log(`${exports.colors.BgRedBright}${exports.colors.FgBlack}[ERROR]${exports.colors.Reset} ${text}`);
 }
 exports.print_error = print_error;
 function print_note(text) {
-    console.log(`[NOTE] ${text}`);
+    console.log(`${exports.colors.BgCyan}${exports.colors.FgBlack}[NOTE]${exports.colors.Reset} ${text}`);
 }
 exports.print_note = print_note;
 function print_release(release, known_packages) {
@@ -56,11 +88,6 @@ function print_package(pkg) {
     console.log('\n');
 }
 exports.print_package = print_package;
-exports.possible_options = ["install", "sync", "search", "list", "help", "add_repo", "remove_repo", "create_package", "create_release", "upload_release"];
-exports.possible_args = {
-    VERSION: "--version",
-    INSTALL_METHOD: "--method" // packageBehavior
-};
 function arr_eq(arrOne, arrTwo) {
     return JSON.stringify(arrOne) == JSON.stringify(arrTwo);
 }

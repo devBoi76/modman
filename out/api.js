@@ -24,6 +24,7 @@ const http = __importStar(require("http"));
 const util = __importStar(require("./util"));
 const fs = __importStar(require("fs"));
 const packages = __importStar(require("./package"));
+const configuration = __importStar(require("./configuration"));
 var FormData = require('form-data');
 function download_release(release, known_packages) {
     let parent_pkg = packages.id_to_object(release.parent_package_id, known_packages);
@@ -34,10 +35,16 @@ function download_release(release, known_packages) {
 }
 exports.download_release = download_release;
 function get_available_packages(repo, as_json) {
-    if (as_json === true) {
-        return JSON.parse(util.get_sync(repo + "/get_available_packages"));
+    let resp = util.get_sync(repo + "/get_available_packages");
+    if (resp == undefined) {
+        util.print_error(`Could not reach repository "${repo}"`);
+        util.print_note("Perhaps you made a typo or the repository is currently offline.");
+        process.exit();
     }
-    return util.get_sync(repo + "/get_available_packages");
+    if (as_json === true) {
+        return JSON.parse(resp);
+    }
+    return repo;
 }
 exports.get_available_packages = get_available_packages;
 function sync_packages_one_repo(repo) {
@@ -64,6 +71,7 @@ function remove_repo(repo) {
 }
 exports.remove_repo = remove_repo;
 function sync_all_repos() {
+    configuration.ensure_repos();
     util.print_note("Synchronizing with all known repositories..");
     let config = JSON.parse(fs.readFileSync("./.modman/conf.json", { encoding: 'utf8', flag: 'r' }));
     let indexes_to_sync = [];

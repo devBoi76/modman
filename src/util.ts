@@ -3,16 +3,52 @@ import * as packages from "./package"
 // var XMLHttpRequest = require("xmlhttprequest");
 import * as xmlhpr from "xmlhttprequest"
 
+export const possible_options = ["install", "sync", "search", "list", "help", "add_repo", "remove_repo", "create_package", "create_release", "upload_release"];
+export const possible_args = {
+	VERSION: "--version",
+	INSTALL_METHOD: "--method" // packageBehavior
+}
+
+export const colors = {
+	Reset: "\x1b[0m",
+	Bright: "\x1b[1m",
+	Dim: "\x1b[2m",
+	Underscore: "\x1b[4m",
+	Blink: "\x1b[5m",
+	Reverse: "\x1b[7m",
+	Hidden: "\x1b[8m",
+
+	FgBlack: "\x1b[30m",
+	FgRed: "\x1b[31m",
+	FgRedBright: "\x1b[91m",
+	FgGreen: "\x1b[32m",
+	FgYellow: "\x1b[33m",
+	FgBlue: "\x1b[34m",
+	FgMagenta: "\x1b[35m",
+	FgCyan: "\x1b[36m",
+	FgWhite: "\x1b[37m",
+
+	BgBlack: "\x1b[40m",
+	BgRed: "\x1b[41m",
+	BgRedBright: "\x1b[101m",
+	BgGreen: "\x1b[42m",
+	BgYellow: "\x1b[43m",
+	BgBlue: "\x1b[44m",
+	BgMagenta: "\x1b[45m",
+	BgCyan: "\x1b[46m",
+	BgWhite: "\x1b[47m"
+}
+
 export function ask_user(text: string, options: Array<string>, default_option: string) {
 	const options_str = options.join("/").replace(default_option, default_option.toUpperCase());
 	const prompt_str = text + " [" + options_str + "]: ";
 	return prmpt(prompt_str, default_option);
 }
 export function print_error(text: string) {
-	console.log(`[ERROR] ${text}`);
+	console.log(`${colors.BgRedBright}${colors.FgBlack}[ERROR]${colors.Reset} ${text}`);
 }
 export function print_note(text: string) {
-	console.log(`[NOTE] ${text}`);
+	console.log(`${colors.BgCyan}${colors.FgBlack}[NOTE]${colors.Reset} ${text}`);
 }
 
 export function print_release(release: packages.Release, known_packages: Array<packages.Package>): void {
@@ -33,11 +69,8 @@ export function print_package(pkg: packages.Package) {
 	console.log('\n');
 }
 
-export const possible_options = ["install", "sync", "search", "list", "help", "add_repo", "remove_repo", "create_package", "create_release", "upload_release"];
-export const possible_args = {
-	VERSION: "--version",
-	INSTALL_METHOD: "--method" // packageBehavior
-}
+
+
 export function arr_eq(arrOne: Array<any>, arrTwo: Array<any>): boolean {
 	return JSON.stringify(arrOne) == JSON.stringify(arrTwo)
 }
