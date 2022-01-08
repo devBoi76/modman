@@ -87,9 +87,14 @@ function print_package(pkg) {
         console.log("| No releases found\n");
         return;
     }
-    for (const release of pkg.releases) {
-        console.log(`|> Version ${release.version} for Minecraft ${release.game_version} (${release.downloads})\n`);
+    let visible = pkg.releases.slice(0, 6);
+    for (const release of visible) {
+        console.log(`|> Version ${release.version} for Minecraft ${release.game_version} (${release.downloads})`);
     }
+    if (pkg.releases.length - visible.length > 0) {
+        console.log(`| And ${pkg.releases.length - visible.length} more..`);
+    }
+    console.log("");
 }
 exports.print_package = print_package;
 const range = (start, stop, step) => Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + (i * step));

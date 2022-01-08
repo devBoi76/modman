@@ -78,8 +78,12 @@ function print_package(pkg) {
         console.log("| No releases found\n");
         return;
     }
-    for (const release of releases) {
+    let visible = releases.slice(0, 6);
+    for (const release of visible) {
         console.log(`|> Version ${release.version_number} for Minecraft ${release.game_versions.join(", ")} (${release.downloads})`);
+    }
+    if (releases.length - visible.length > 0) {
+        console.log(`| And ${releases.length - visible.length} more..`);
     }
     console.log("");
 }
