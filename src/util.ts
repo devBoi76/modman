@@ -69,9 +69,8 @@ export function print_package(pkg: packages.Package) {
 		return;
 	}
 	for(const release of pkg.releases) {
-		console.log(`|> Version ${release.version} for Minecraft ${release.game_version} (${release.downloads})`);
+		console.log(`|> Version ${release.version} for Minecraft ${release.game_version} (${release.downloads})\n`);
 	}
-	console.log('\n');
 }
 
 export const range = (start, stop, step) => Array.from({ length: (stop - start) / step + 1}, (_, i) => start + (i * step));
