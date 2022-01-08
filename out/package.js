@@ -19,7 +19,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.unify_indexes = exports.release_compatible = exports.get_desired_release = exports.id_to_object = exports.names_to_objects = exports.read_pkg_json = exports.get_total_downloads = exports.Package = exports.Dependency = exports.Release = void 0;
+exports.unify_indexes = exports.release_compatible = exports.get_desired_release = exports.id_to_object = exports.names_to_objects = exports.read_pkg_json = exports.get_total_downloads = exports.Repository = exports.Package = exports.Dependency = exports.Release = void 0;
 const fs = __importStar(require("fs"));
 const configuration = __importStar(require("./configuration"));
 const util = __importStar(require("./util"));
@@ -31,8 +31,23 @@ class Dependency {
 }
 exports.Dependency = Dependency;
 class Package {
+    constructor(id, name, description, releases, repository, repository_id) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.releases = releases;
+        this.repository = repository;
+        this.repository_id = repository_id;
+    }
 }
 exports.Package = Package;
+class Repository {
+    constructor(url, api_type) {
+        this.url = url;
+        this.api_type = api_type;
+    }
+}
+exports.Repository = Repository;
 // When we parse the package JSON to an object, the object doesn't have any function as JSON doesn't store them, so we have to do this
 function get_total_downloads(pkg) {
     let all = 0;
@@ -64,7 +79,7 @@ function read_pkg_json() {
     return json;
 }
 exports.read_pkg_json = read_pkg_json;
-function names_to_objects(package_names, known_packages) {
+function names_to_objects(package_names, known_packages, exit) {
     let objects = new Set();
     for (const name of package_names) {
         let pkgs = known_packages.filter(pkg => pkg.name.toLowerCase() == name.toLowerCase());
@@ -92,7 +107,9 @@ function names_to_objects(package_names, known_packages) {
             if (util.similarity(name, best_match) > 0.6) {
                 util.print_note(`Did you mean "${best_match}"?`);
             }
-            process.exit();
+            if (exit) {
+                process.exit();
+            }
         }
     }
     return objects;

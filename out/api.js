@@ -51,17 +51,34 @@ function sync_packages_one_repo(repo) {
     fs.writeFileSync("./.modman/pkg_idx.json", get_available_packages(repo));
 }
 exports.sync_packages_one_repo = sync_packages_one_repo;
-function add_repos(repo) {
+function add_repos(repos) {
     let config = JSON.parse(fs.readFileSync("./.modman/conf.json", { encoding: 'utf8', flag: 'r' }));
-    config.repos = config.repos.concat(repo);
+    let repo_objs = new Array();
+    for (const repo of repos) {
+        let resp = util.get_sync(`${repo}/get_repo_info`);
+        if (resp == undefined) {
+            util.print_error(`Repository ${repo} could not be reached`);
+            util.print_note("Perhaps it is offline or you made a typo");
+            process.exit();
+        }
+        console.log(resp);
+        resp = JSON.parse(resp);
+        console.log(resp);
+        if (![1, 2].includes(resp.api_type)) {
+            util.print_error(`Unknown repository type ${resp.api_type} for ${repo}`);
+            process.exit();
+        }
+        repo_objs.push(new packages.Repository(repo, resp.api_type));
+    }
+    config.repos = config.repos.concat(repo_objs);
     fs.writeFileSync("./.modman/conf.json", JSON.stringify(config));
 }
 exports.add_repos = add_repos;
 function remove_repo(repo) {
     let config = JSON.parse(fs.readFileSync("./.modman/conf.json", { encoding: 'utf8', flag: 'r' }));
     let tmp = config.repos.length;
-    config.repos = config.repos.filter((value) => {
-        return value != repo;
+    config.repos = config.repos.filter((repository) => {
+        return repository.url != repo;
     });
     if (config.repos.length == tmp) {
         util.print_error("You have not added this repository, so you can't remove it");
@@ -76,7 +93,13 @@ function sync_all_repos() {
     let config = JSON.parse(fs.readFileSync("./.modman/conf.json", { encoding: 'utf8', flag: 'r' }));
     let indexes_to_sync = [];
     for (const repo of config.repos) {
-        indexes_to_sync.push(get_available_packages(repo, true));
+        if (repo.api_type == 2) {
+            util.print_error("TODO: api v2 support");
+            process.exit();
+        }
+        if (repo.api_type == 1) {
+            indexes_to_sync.push(get_available_packages(repo.url, true));
+        }
     }
     let unified = packages.unify_indexes(indexes_to_sync);
     fs.writeFileSync("./.modman/pkg_idx.json", JSON.stringify(unified));

@@ -70,7 +70,8 @@ function create_template_file() {
     // const writer = fs.createWriteStream("./.modman/conf.json", {flags: "w"});
     const default_json = {
         game_version: "1.16",
-        repos: []
+        repos: [],
+        search_modrinth: false
     };
     fs.writeFileSync("./.modman/conf.json", JSON.stringify(default_json));
 }

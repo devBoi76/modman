@@ -33,6 +33,8 @@ const util = __importStar(require("./util"));
 const packages = __importStar(require("./package"));
 const configuration = __importStar(require("./configuration"));
 const api = __importStar(require("./api"));
+const modrinth = __importStar(require("./modrinth_api"));
+const fs = __importStar(require("fs"));
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         //ensure that a file at ./modman/conf.js is accesible
@@ -53,9 +55,7 @@ function main() {
         }
         // make configuration
         let parsed_args = configuration.parse_args(options); // removes options
-        // let config = new configuration.Configuration(parsed_args.version, parsed_args.install_method);
-        // console.log(parsed_args);
-        // console.log(config);
+        let config = JSON.parse(fs.readFileSync("./.modman/conf.json", "utf8"));
         switch (parsed_args.operation) {
             case "install": {
                 if (parsed_args.words.length == 0) {
@@ -65,7 +65,7 @@ function main() {
                 }
                 let known_packages = packages.read_pkg_json();
                 let desired_pkg_names = parsed_args.words;
-                let desired_pkg_objects = packages.names_to_objects(desired_pkg_names, known_packages); // Set
+                let desired_pkg_objects = packages.names_to_objects(desired_pkg_names, known_packages, !config.search_modrinth); // Set
                 let desired_releases = new Set();
                 for (const entry of desired_pkg_objects.entries()) {
                     let r = packages.get_desired_release(entry[0], parsed_args.version);
@@ -86,6 +86,34 @@ function main() {
                     util.print_release(value, known_packages);
                     api.download_release(value, known_packages);
                 });
+                // BEGIN MODRINTH
+                if (config.search_modrinth && desired_pkg_objects.size != parsed_args.words.length) {
+                    let not_found_pkg_names = new Array();
+                    let found_pkg_names = new Array();
+                    for (const pkg of desired_pkg_objects) {
+                        found_pkg_names.push(pkg.name.toLowerCase());
+                    }
+                    for (const word of parsed_args.words) {
+                        if (!found_pkg_names.includes(word.toLowerCase())) {
+                            not_found_pkg_names.push(word);
+                        }
+                    }
+                    let modrinth_pkg_objects = new Array();
+                    for (const name of not_found_pkg_names) {
+                        modrinth_pkg_objects.push(modrinth.search_mod(name, parsed_args.version)[0]);
+                    }
+                    let modrinth_releases = new Array();
+                    util.print_note(`Searching through modrinth for ${not_found_pkg_names.join(", ")}..`);
+                    for (const pkg of modrinth_pkg_objects) {
+                        modrinth_releases.push(modrinth.get_desired_release(pkg, parsed_args.version));
+                    }
+                    util.print_note("From Modrinth:");
+                    for (const rel of modrinth_releases) {
+                        modrinth.print_version(rel);
+                        modrinth.download_release(rel);
+                    }
+                }
+                // END MODRINTH
                 break;
             }
             case "sync": {
@@ -141,15 +169,36 @@ function main() {
             }
             case "search": {
                 if (parsed_args.words.length == 0) {
-                    util.print_error("No packages to search for");
+                    util.print_error("No packagse to search for");
                     util.print_note("example usage is `./main.js search JEI`");
                     process.exit();
                 }
                 let known_packages = packages.read_pkg_json();
                 let desired_pkg_names = parsed_args.words;
-                let desired_pkg_objects = packages.names_to_objects(desired_pkg_names, known_packages);
+                let desired_pkg_objects = packages.names_to_objects(desired_pkg_names, known_packages, !config.search_modrinth);
                 for (const pkg of desired_pkg_objects) {
                     util.print_package(pkg);
+                }
+                if (config.search_modrinth && parsed_args.words.length != desired_pkg_objects.size) {
+                    let not_found_pkg_names = new Array();
+                    let found_pkg_names = new Array();
+                    for (const pkg of desired_pkg_objects) {
+                        found_pkg_names.push(pkg.name.toLowerCase());
+                    }
+                    for (const word of parsed_args.words) {
+                        if (!found_pkg_names.includes(word.toLowerCase())) {
+                            not_found_pkg_names.push(word);
+                        }
+                    }
+                    let modrinth_pkg_objects = new Array();
+                    for (const name of not_found_pkg_names) {
+                        modrinth_pkg_objects = modrinth_pkg_objects.concat(modrinth.search_mod(name, parsed_args.version));
+                    }
+                    util.print_note(`Searching through modrinth for ${not_found_pkg_names.join(", ")}..`);
+                    for (const pkg of modrinth_pkg_objects) {
+                        modrinth.print_package(modrinth.modrinth_to_internal(pkg));
+                    }
+                    util.print_note(`Searching through modrinth returned ${modrinth_pkg_objects.length} more packages`);
                 }
                 break;
             }

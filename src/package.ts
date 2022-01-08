@@ -27,6 +27,25 @@ export class Package {
     releases: Array<Release>;
     repository: string;
     repository_id: number;
+    
+    constructor(id: number, name: string, description: string, releases: Array<Release>, repository: string, repository_id: number) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.releases = releases;
+        this.repository = repository;
+        this.repository_id = repository_id;
+    }
+}
+
+export class Repository {
+    url: string;
+    api_type: number; // 1 for normal, 2 for direct
+    
+    constructor(url:string, api_type: number) {
+        this.url = url;
+        this.api_type = api_type;
+    }
 }
 
 // When we parse the package JSON to an object, the object doesn't have any function as JSON doesn't store them, so we have to do this
@@ -60,7 +79,7 @@ export function read_pkg_json(): Array<Package> {
     return json;
 }
 
-export function names_to_objects(package_names: Array<string>, known_packages: any): Set<Package> {
+export function names_to_objects(package_names: Array<string>, known_packages: any, exit: boolean): Set<Package> {
     let objects = new Set<Package>();
     for(const name of package_names) {
         let pkgs = known_packages.filter(pkg => pkg.name.toLowerCase() == name.toLowerCase());
@@ -86,7 +105,9 @@ export function names_to_objects(package_names: Array<string>, known_packages: a
                 if (util.similarity(name, best_match) > 0.6) {
                     util.print_note(`Did you mean "${best_match}"?`);
                 }
-                process.exit();
+                if(exit) {
+                    process.exit();
+                }
             }  
          
     }
