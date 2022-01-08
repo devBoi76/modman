@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Fri Jan  7 16:57:40 2022
+# Make data base, printed on Sat Jan  8 13:14:46 2022
 
 # Variables
 
@@ -19,7 +19,7 @@ LC_ALL = C
 # environment
 GTK_RC_FILES = /etc/gtk/gtkrc:/home/jan/.gtkrc:/home/jan/.config/gtkrc
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-9d2fbac5-a815-41d1-a19b-7eefc2d1d182.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-fcbe2b6f-2d5c-49bc-bebe-a019b9933f84.sock
 # environment
 MANDATORY_PATH = /usr/share/gconf/plasma.mandatory.path
 # environment
@@ -79,7 +79,7 @@ PAM_KWALLET5_LOGIN = /run/user/1000/kwallet5.socket
 # environment
 MFLAGS = -pqrR
 # environment
-SSH_AUTH_SOCK = /tmp/ssh-189JcAMQLB6k/agent.1259
+SSH_AUTH_SOCK = /tmp/ssh-3FSUuS15XcQ9/agent.4033
 # default
 .SHELLFLAGS := -c
 # environment
@@ -99,13 +99,13 @@ MAKEFILE_LIST := Makefile
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_PID = 11029
+VSCODE_PID = 6678
 # environment
 XDG_SESSION_TYPE = x11
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # environment
-SESSION_MANAGER = local/komp:@/tmp/.ICE-unix/1479,unix/komp:/tmp/.ICE-unix/1479
+SESSION_MANAGER = local/komp:@/tmp/.ICE-unix/4313,unix/komp:/tmp/.ICE-unix/4313
 # automatic
 *F = $(notdir $*)
 # environment
@@ -189,7 +189,7 @@ MAKE_VERSION := 4.3
 # environment
 LC_MEASUREMENT = pl_PL.UTF-8
 # environment
-SSH_AGENT_PID = 1340
+SSH_AGENT_PID = 4113
 # environment
 _ = /usr/share/codium/codium
 # environment
@@ -243,23 +243,17 @@ LC_IDENTIFICATION = pl_PL.UTF-8
 
 # Directories
 
-# src (device 66307, inode 11813229): 9 files, no impossibilities.
-# . (device 66307, inode 11812953): 18 files, no impossibilities.
-# out (device 66307, inode 11813110): 16 files, no impossibilities.
+# src (device 66307, inode 11813229): 7 files, no impossibilities.
+# . (device 66307, inode 11812953): 16 files, no impossibilities.
+# out (device 66307, inode 11813110): 15 files, no impossibilities.
 
-# 43 files, no impossibilities in 3 directories.
+# 38 files, no impossibilities in 3 directories.
 
 # Implicit Rules
 
 # No implicit rules.
 
 # Files
-
-# Not a target:
-src/program.ts:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
 
 # Not a target:
 src/api.ts:
@@ -296,10 +290,9 @@ out/util.js.map:
 out/main.js.map:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
- 
 #  File has not been updated.
 
-clean: out/api.js out/api.js.map out/configuration.js out/configuration.js.map out/download.js out/download.js.map out/main.js out/main.js.map out/package.js out/package.js.map out/program.js out/program.js.map out/util.js out/util.js.map
+clean: out/api.js out/api.js.map out/configuration.js out/configuration.js.map out/download.js out/download.js.map out/main.js out/main.js.map out/package.js out/package.js.map out/program.js.map out/util.js out/util.js.map
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -314,6 +307,7 @@ out/util.js:
 
 # Not a target:
 out/api.js:
+ 
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -367,13 +361,7 @@ src/configuration.ts:
 #  Modification time never checked.
 #  File has not been updated.
 
-# Not a target:
-out/program.js:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-
-build: src/api.ts src/configuration.ts src/global.ts src/main.ts src/package.ts src/program.ts src/util.ts
+build: src/api.ts src/configuration.ts src/main.ts src/package.ts src/util.ts
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -399,12 +387,6 @@ src/main.ts:
 #  File has not been updated.
 
 # Not a target:
-src/global.ts:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-
-# Not a target:
 out/package.js:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
@@ -417,19 +399,19 @@ out/download.js.map:
 #  File has not been updated.
 
 # files hash-table stats:
-# Load=27/1024=3%, Rehash=0, Collisions=2/58=3%
+# Load=24/1024=2%, Rehash=0, Collisions=2/52=4%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 67 / storage = 830 B / avg = 12 B
-# current buf: size = 8162 B / used = 830 B / count = 67 / avg = 12 B
+# strcache buffers: 1 (0) / strings = 59 / storage = 735 B / avg = 12 B
+# current buf: size = 8162 B / used = 735 B / count = 59 / avg = 12 B
 
-# strcache performance: lookups = 79 / hit rate = 15%
+# strcache performance: lookups = 71 / hit rate = 16%
 # hash-table stats:
-# Load=67/8192=1%, Rehash=0, Collisions=0/79=0%
-# Finished Make data base on Fri Jan  7 16:57:40 2022
+# Load=59/8192=1%, Rehash=0, Collisions=0/71=0%
+# Finished Make data base on Sat Jan  8 13:14:46 2022
 
  

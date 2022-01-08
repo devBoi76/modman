@@ -62,14 +62,19 @@ export function print_release(release: packages.Release, known_packages: Array<p
 
 export function print_package(pkg: packages.Package) {
 	console.log(`${colors.BgGreen}${colors.FgBlack}[Package]${colors.Reset} ${pkg.name} - ${pkg.description}`);
+	console.log(`| Total Downloads: ${packages.get_total_downloads(pkg)} | Repository: ${pkg.repository}`);
 	console.log(`| Releases:`);
+	if(pkg.releases.length == 0) {
+		console.log("| No releases found\n");
+		return;
+	}
 	for(const release of pkg.releases) {
-		console.log(`|> Version ${release.version} for Minecraft ${release.game_version}`);
+		console.log(`|> Version ${release.version} for Minecraft ${release.game_version} (${release.downloads})`);
 	}
 	console.log('\n');
 }
 
-
+export const range = (start, stop, step) => Array.from({ length: (stop - start) / step + 1}, (_, i) => start + (i * step));
 
 export function arr_eq(arrOne: Array<any>, arrTwo: Array<any>): boolean {
 	return JSON.stringify(arrOne) == JSON.stringify(arrTwo)

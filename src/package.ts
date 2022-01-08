@@ -2,6 +2,7 @@
 import * as fs from "fs"
 import * as configuration from "./configuration"
 import * as util from "./util"
+var prompt = require('prompt-sync')();
 
 export class Release {
     id: number;
@@ -11,6 +12,7 @@ export class Release {
     parent_package_id: number;
     released: number; // utc timestamp
     is_dependency: boolean;
+    downloads: number;
 }
 
 export class Dependency {
@@ -25,6 +27,18 @@ export class Package {
     releases: Array<Release>;
     repository: string;
     repository_id: number;
+}
+
+// When we parse the package JSON to an object, the object doesn't have any function as JSON doesn't store them, so we have to do this
+export function get_total_downloads(pkg: Package) {
+    let all = 0;
+    if(pkg.releases.length == 0) {
+        return all;
+    }
+    for(const rel of pkg.releases) {
+        all += rel.downloads;
+    }
+    return all;
 }
 
 export function read_pkg_json(): Array<Package> {
@@ -47,26 +61,34 @@ export function read_pkg_json(): Array<Package> {
 }
 
 export function names_to_objects(package_names: Array<string>, known_packages: any): Set<Package> {
-    let objects = new Set<Package>(); // we can use Array.filter() ! IDK about the performance though
-    
+    let objects = new Set<Package>();
     for(const name of package_names) {
-        let pkg = known_packages.filter(pkg => pkg.name.toLowerCase() == name.toLowerCase())[0]
-        if(pkg){
-            objects.add(pkg);
-        } else {
-            util.print_error(`Package "${name}" not found`);
-            let best_match = "";
-            let k_names = known_packages.map( (value) => { return value.name.toLowerCase()});
-            for(const name_b of k_names) {
-                if(util.similarity(name.toLowerCase(), name_b) > util.similarity(best_match, name_b)) {
-                    best_match = name_b;
+        let pkgs = known_packages.filter(pkg => pkg.name.toLowerCase() == name.toLowerCase());
+            if(pkgs.length > 1) {
+                util.print_note(`${pkgs.length} packages with the name ${name} found`);
+                for (let i = 0; i < pkgs.length; i++) {
+                    console.log(i+1);
+                    util.print_package(pkgs[i]);
                 }
-            }
-            if (util.similarity(name, best_match) > 0.6) {
-                util.print_note(`Did you mean "${best_match}"?`);
-            }
-            process.exit();
-        }
+                let selection = prompt(`Which package to install? [${util.range(1,pkgs.length, 1).join(", ")}]: `, 1);
+                objects.add(pkgs[parseInt(selection)-1]);
+            } else if (pkgs.length == 1) { // 1 package found
+                objects.add(pkgs[0]);
+            } else {
+                util.print_error(`Package "${name}" not found`);
+                let best_match = "";
+                let k_names = known_packages.map( (value) => { return value.name.toLowerCase()});
+                for(const name_b of k_names) {
+                    if(util.similarity(name.toLowerCase(), name_b) > util.similarity(best_match, name_b)) {
+                        best_match = name_b;
+                    }
+                }
+                if (util.similarity(name, best_match) > 0.6) {
+                    util.print_note(`Did you mean "${best_match}"?`);
+                }
+                process.exit();
+            }  
+         
     }
     return objects;
 }

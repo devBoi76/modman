@@ -19,10 +19,11 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.unify_indexes = exports.release_compatible = exports.get_desired_release = exports.id_to_object = exports.names_to_objects = exports.read_pkg_json = exports.Package = exports.Dependency = exports.Release = void 0;
+exports.unify_indexes = exports.release_compatible = exports.get_desired_release = exports.id_to_object = exports.names_to_objects = exports.read_pkg_json = exports.get_total_downloads = exports.Package = exports.Dependency = exports.Release = void 0;
 const fs = __importStar(require("fs"));
 const configuration = __importStar(require("./configuration"));
 const util = __importStar(require("./util"));
+var prompt = require('prompt-sync')();
 class Release {
 }
 exports.Release = Release;
@@ -32,6 +33,18 @@ exports.Dependency = Dependency;
 class Package {
 }
 exports.Package = Package;
+// When we parse the package JSON to an object, the object doesn't have any function as JSON doesn't store them, so we have to do this
+function get_total_downloads(pkg) {
+    let all = 0;
+    if (pkg.releases.length == 0) {
+        return all;
+    }
+    for (const rel of pkg.releases) {
+        all += rel.downloads;
+    }
+    return all;
+}
+exports.get_total_downloads = get_total_downloads;
 function read_pkg_json() {
     let file = undefined;
     let json = undefined;
@@ -52,11 +65,20 @@ function read_pkg_json() {
 }
 exports.read_pkg_json = read_pkg_json;
 function names_to_objects(package_names, known_packages) {
-    let objects = new Set(); // we can use Array.filter() ! IDK about the performance though
+    let objects = new Set();
     for (const name of package_names) {
-        let pkg = known_packages.filter(pkg => pkg.name.toLowerCase() == name.toLowerCase())[0];
-        if (pkg) {
-            objects.add(pkg);
+        let pkgs = known_packages.filter(pkg => pkg.name.toLowerCase() == name.toLowerCase());
+        if (pkgs.length > 1) {
+            util.print_note(`${pkgs.length} packages with the name ${name} found`);
+            for (let i = 0; i < pkgs.length; i++) {
+                console.log(i + 1);
+                util.print_package(pkgs[i]);
+            }
+            let selection = prompt(`Which package to install? [${util.range(1, pkgs.length, 1).join(", ")}]: `, 1);
+            objects.add(pkgs[parseInt(selection) - 1]);
+        }
+        else if (pkgs.length == 1) { // 1 package found
+            objects.add(pkgs[0]);
         }
         else {
             util.print_error(`Package "${name}" not found`);

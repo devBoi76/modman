@@ -19,7 +19,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.similarity = exports.get_help = exports.get_sync = exports.arr_eq = exports.print_package = exports.print_release = exports.print_note = exports.print_error = exports.ask_user = exports.colors = exports.possible_args = exports.possible_options = void 0;
+exports.similarity = exports.get_help = exports.get_sync = exports.arr_eq = exports.range = exports.print_package = exports.print_release = exports.print_note = exports.print_error = exports.ask_user = exports.colors = exports.possible_args = exports.possible_options = void 0;
 let prmpt = require("prompt-sync")({ sigint: true });
 const packages = __importStar(require("./package"));
 // var XMLHttpRequest = require("xmlhttprequest");
@@ -81,13 +81,20 @@ function print_release(release, known_packages) {
 exports.print_release = print_release;
 function print_package(pkg) {
     console.log(`${exports.colors.BgGreen}${exports.colors.FgBlack}[Package]${exports.colors.Reset} ${pkg.name} - ${pkg.description}`);
+    console.log(`| Total Downloads: ${packages.get_total_downloads(pkg)} | Repository: ${pkg.repository}`);
     console.log(`| Releases:`);
+    if (pkg.releases.length == 0) {
+        console.log("| No releases found\n");
+        return;
+    }
     for (const release of pkg.releases) {
-        console.log(`|> Version ${release.version} for Minecraft ${release.game_version}`);
+        console.log(`|> Version ${release.version} for Minecraft ${release.game_version} (${release.downloads})`);
     }
     console.log('\n');
 }
 exports.print_package = print_package;
+const range = (start, stop, step) => Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + (i * step));
+exports.range = range;
 function arr_eq(arrOne, arrTwo) {
     return JSON.stringify(arrOne) == JSON.stringify(arrTwo);
 }
