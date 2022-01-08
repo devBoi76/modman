@@ -29,13 +29,13 @@ var FormData = require('form-data');
 function download_release(release, known_packages) {
     let parent_pkg = packages.id_to_object(release.parent_package_id, known_packages);
     const file = fs.createWriteStream(parent_pkg.name + "_" + release.game_version + "_v_" + release.version + ".jar");
-    http.get(`${parent_pkg.repository}/download_release/${parent_pkg.repository_id}/${release.id}`, (response) => {
+    http.get(`${parent_pkg.repository}/v1/download_release/${parent_pkg.repository_id}/${release.id}`, (response) => {
         response.pipe(file);
     });
 }
 exports.download_release = download_release;
 function get_available_packages(repo, as_json) {
-    let resp = util.get_sync(repo + "/get_available_packages");
+    let resp = util.get_sync(repo + "/v1/get_available_packages");
     if (resp == undefined) {
         util.print_error(`Could not reach repository "${repo}"`);
         util.print_note("Perhaps you made a typo or the repository is currently offline.");
@@ -87,7 +87,7 @@ function create_package(repo, name, description) {
     let form = new FormData();
     form.append("name", name);
     form.append("description", description);
-    form.submit(repo + "/create_package", (err, res) => {
+    form.submit(repo + "/v1/create_package", (err, res) => {
         if (err) {
             throw err;
         }
@@ -102,7 +102,7 @@ function create_release(repo, version, game_version, deps, parent_packge_repo_id
     form.append("game_version", game_version);
     form.append("deps", deps);
     form.append("parent_package_id", parent_packge_repo_id);
-    form.submit(repo + "/create_release", (err, res) => {
+    form.submit(repo + "/v1/create_release", (err, res) => {
         if (err) {
             throw err;
         }
@@ -114,7 +114,7 @@ exports.create_release = create_release;
 function upload_release_file(repo, file_path, package_repo_id, release_id) {
     let form = new FormData();
     form.append("file", fs.createReadStream(file_path));
-    form.submit(`${repo}/upload_release_file/${package_repo_id}/${release_id}`, (err, res) => {
+    form.submit(`${repo}/v1/upload_release_file/${package_repo_id}/${release_id}`, (err, res) => {
         if (err) {
             throw err;
         }
