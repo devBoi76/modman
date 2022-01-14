@@ -64,13 +64,12 @@ function search_mod(query, version) {
         util.print_error("Could not find any packages on modrinth");
         process.exit();
     }
-    j_res.filter((mod) => { return util.similarity(mod.title, query) > 0.6; });
+    j_res = j_res.filter((mod) => { return util.similarity(mod.title, query) > 0.6; });
     return j_res;
 }
 exports.search_mod = search_mod;
-function search_mods(query, version) {
+function search_mods(query, version, give_prompt) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(query);
         let promises = new Array();
         for (const q of query) {
             promises.push(node_fetch_1.default(`${api_url}/api/v1/mod?query=${q}&&versions="version=${version}"`));
@@ -88,7 +87,18 @@ function search_mods(query, version) {
             util.print_error("Could not find any packages on modrinth");
             process.exit();
         }
-        mods = mods.filter((mod) => { return util.biggest_similarity(mod.title, query) > 0.6; });
+        // TODO: make this better
+        mods = mods.filter((mod) => {
+            let best_match = util.most_similar(mod.title, query);
+            let sim = util.similarity(mod.title, best_match);
+            if (sim > 0.9 || !give_prompt && sim > 0.7) {
+                return true;
+            }
+            else if (sim > 0.6 && give_prompt) {
+                return util.ask_user(`A similar match to "${best_match}" found, did you mean "${mod.title}" ?`, ['y', 'n'], 'y') == 'y';
+            }
+            false;
+        });
         return mods;
     });
 }
@@ -130,6 +140,8 @@ function print_version(version) {
     console.log(`${util.colors.BgYellow}${util.colors.FgBlack}[External Release]${util.colors.Reset} ${version.name}`);
 }
 exports.print_version = print_version;
+// NOTE: This function will be slow, the biggest delay is waiting for modrinth. 
+// It is only making one request per package which seems reasonable.
 function get_desired_release(pkg, game_version) {
     let all_vers = get_mod_versions(pkg.mod_id);
     all_vers = all_vers.filter((version) => {

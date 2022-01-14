@@ -81,7 +81,9 @@ function main() {
                         desired_releases.add(r);
                     }
                 }
-                util.print_note("Packages to install:");
+                if (desired_releases.size > 0) {
+                    util.print_note("Packages to install:");
+                }
                 desired_releases.forEach((value) => {
                     util.print_release(value, known_packages);
                     api.download_release(value, known_packages);
@@ -98,19 +100,14 @@ function main() {
                             not_found_pkg_names.push(word);
                         }
                     }
-                    //let modrinth_pkg_objects_promises = new Array<Promise<modrinth.ModResult>>();
-                    util.print_debug("starting search");
-                    let modrinth_pkg_objects = yield modrinth.search_mods(not_found_pkg_names, parsed_args.version); // = await Promise.all(modrinth_pkg_objects_promises);
-                    util.print_debug("stopped");
-                    let modrinth_releases = new Array();
                     util.print_note(`Searching through modrinth for ${not_found_pkg_names.join(", ")}..`);
+                    let modrinth_pkg_objects = yield modrinth.search_mods(not_found_pkg_names, parsed_args.version, true);
+                    let modrinth_releases = new Array();
                     for (const pkg of modrinth_pkg_objects) {
                         modrinth_releases.push(modrinth.get_desired_release(pkg, parsed_args.version));
                     }
-                    console.log(modrinth_releases);
                     util.print_note("From Modrinth:");
                     for (const rel of modrinth_releases) {
-                        // console.log(rel);
                         modrinth.print_version(rel);
                         modrinth.download_release(rel);
                     }
@@ -192,11 +189,12 @@ function main() {
                             not_found_pkg_names.push(word);
                         }
                     }
-                    let modrinth_pkg_objects = new Array();
-                    for (const name of not_found_pkg_names) {
-                        modrinth_pkg_objects = modrinth_pkg_objects.concat(modrinth.search_mod(name, parsed_args.version));
-                    }
+                    let modrinth_pkg_objects = yield modrinth.search_mods(not_found_pkg_names, parsed_args.version, true);
+                    // for(const name of not_found_pkg_names) {
+                    // 	modrinth_pkg_objects = modrinth_pkg_objects.concat(modrinth.search_mod(name, parsed_args.version));
+                    // }
                     util.print_note(`Searching through modrinth for ${not_found_pkg_names.join(", ")}..`);
+                    console.log(modrinth_pkg_objects);
                     for (const pkg of modrinth_pkg_objects) {
                         modrinth.print_package(modrinth.modrinth_to_internal(pkg));
                     }

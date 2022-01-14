@@ -19,7 +19,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.similarity = exports.biggest_similarity = exports.get_help = exports.get_sync = exports.arr_eq = exports.range = exports.print_package = exports.print_release = exports.print_debug = exports.print_note = exports.print_error = exports.ask_user = exports.colors = exports.possible_args = exports.possible_options = void 0;
+exports.similarity = exports.most_similar = exports.get_help = exports.get_sync = exports.arr_eq = exports.range = exports.print_package = exports.print_release = exports.print_debug = exports.print_note = exports.print_error = exports.ask_user = exports.colors = exports.possible_args = exports.possible_options = void 0;
 let prmpt = require("prompt-sync")({ sigint: true });
 const packages = __importStar(require("./package"));
 // var XMLHttpRequest = require("xmlhttprequest");
@@ -59,7 +59,7 @@ exports.colors = {
 };
 function ask_user(text, options, default_option) {
     const options_str = options.join("/").replace(default_option, default_option.toUpperCase());
-    const prompt_str = text + " [" + options_str + "]: ";
+    const prompt_str = exports.colors.Bright + text + " [" + options_str + "]: " + exports.colors.Reset;
     return prmpt(prompt_str, default_option);
 }
 exports.ask_user = ask_user;
@@ -128,16 +128,16 @@ function get_help() {
     console.log("`modman install --version <minecraft version>` - download the package for a specified version");
 }
 exports.get_help = get_help;
-function biggest_similarity(s1, strs) {
-    let max = 0;
+function most_similar(s1, strs) {
+    let best = "";
     for (const str of strs) {
-        if (similarity(s1, str) > max) {
-            max = similarity(s1, str);
+        if (similarity(s1, str) > similarity(s1, best)) {
+            best = str;
         }
     }
-    return max;
+    return best;
 }
-exports.biggest_similarity = biggest_similarity;
+exports.most_similar = most_similar;
 function similarity(s1, s2) {
     let longer = s1;
     let shorter = s2;

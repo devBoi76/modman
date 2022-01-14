@@ -72,8 +72,7 @@ export function search_mod(query: string, version: string): Array<ModResult> {
     return j_res;
 }
 
-export async function search_mods(query: Array<string>, version: string): Promise<Array<ModResult>> {
-    console.log(query)
+export async function search_mods(query: Array<string>, version: string, give_prompt: boolean): Promise<Array<ModResult>> {
     let promises = new Array<Promise<Response>>();
     
     for(const q of query) {
@@ -89,12 +88,24 @@ export async function search_mods(query: Array<string>, version: string): Promis
     let mods = hits.flatMap( (hit) => {
         return hit.hits;
     });
+
     // let j_res: Array<ModResult> = mod_results.hits;
     if(mods.length == 0) {
         util.print_error("Could not find any packages on modrinth");
         process.exit();
     }
-    mods = mods.filter( (mod) => { return util.biggest_similarity(mod.title, query) > 0.6});
+    
+    // TODO: make this better
+    mods = mods.filter( (mod) => { 
+        let best_match = util.most_similar(mod.title, query);
+        let sim = util.similarity(mod.title, best_match);
+        if(sim > 0.9 || !give_prompt && sim > 0.7) {
+            return true
+        } else if (sim > 0.6 && give_prompt) {
+            return util.ask_user(`A similar match to "${best_match}" found, did you mean "${mod.title}" ?`, ['y', 'n'], 'y') == 'y';
+        }
+        false
+    });
     return mods;
 }
 
@@ -106,7 +117,6 @@ export function modrinth_to_internal(mod_res: ModResult): ModirinthPackage {
 export function get_mod_versions(mod_id: string): Array<Version> {
     let a = util.get_sync(`${api_url}/api/v1/mod/${mod_id.replace("local-", "")}/version`)
     return JSON.parse(a);
-    
 }
 
 export function get_mod_version(version_id: string) {
@@ -136,6 +146,8 @@ export function print_version(version: Version) {
     console.log(`${util.colors.BgYellow}${util.colors.FgBlack}[External Release]${util.colors.Reset} ${version.name}`);
 }
 
+// NOTE: This function will be slow, the biggest delay is waiting for modrinth. 
+// It is only making one request per package which seems reasonable.
 export function get_desired_release(pkg: ModResult, game_version: string): Version {
     let all_vers = get_mod_versions(pkg.mod_id);
     all_vers = all_vers.filter ( (version) => {

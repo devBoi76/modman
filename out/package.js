@@ -96,7 +96,7 @@ function names_to_objects(package_names, known_packages, exit) {
             objects.add(pkgs[0]);
         }
         else {
-            util.print_error(`Package "${name}" not found`);
+            util.print_error(`Package "${name}" not found in the native repositories`);
             let best_match = "";
             let k_names = known_packages.map((value) => { return value.name.toLowerCase(); });
             for (const name_b of k_names) {

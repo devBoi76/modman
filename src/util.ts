@@ -42,7 +42,7 @@ export const colors = {
 
 export function ask_user(text: string, options: Array<string>, default_option: string) {
 	const options_str = options.join("/").replace(default_option, default_option.toUpperCase());
-	const prompt_str = text + " [" + options_str + "]: ";
+	const prompt_str = colors.Bright + text + " [" + options_str + "]: " + colors.Reset;
 	return prmpt(prompt_str, default_option);
 }
 export function print_error(text: string) {
@@ -109,14 +109,14 @@ export function get_help() {
 	console.log("`modman install --version <minecraft version>` - download the package for a specified version");
 }
 
-export function biggest_similarity(s1: string, strs: Array<string>): number {
-	let max: number = 0;
+export function most_similar(s1: string, strs: Array<string>): string {
+	let best: string = "";
 	for(const str of strs) {
-		if(similarity(s1, str) > max) {
-			max = similarity(s1, str);
+		if(similarity(s1, str) > similarity(s1,best)) {
+			best = str;
 		}
 	}
-	return max;
+	return best;
 }
 
 export function similarity(s1: string, s2: string): number {

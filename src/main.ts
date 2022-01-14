@@ -56,8 +56,9 @@ async function main(){
 					desired_releases.add(r);
 				}
 			}
-
-			util.print_note("Packages to install:");
+			if(desired_releases.size > 0) {
+				util.print_note("Packages to install:");
+			}
 			desired_releases.forEach( (value) => {
 				util.print_release(value, known_packages);
 				api.download_release(value, known_packages);
@@ -79,23 +80,16 @@ async function main(){
 					}
 				}
 
-				//let modrinth_pkg_objects_promises = new Array<Promise<modrinth.ModResult>>();
-				
-				util.print_debug("starting search")
-				
-				let modrinth_pkg_objects = await modrinth.search_mods(not_found_pkg_names, parsed_args.version);// = await Promise.all(modrinth_pkg_objects_promises);
-				util.print_debug("stopped")
+				util.print_note(`Searching through modrinth for ${not_found_pkg_names.join(", ")}..`);
+
+				let modrinth_pkg_objects = await modrinth.search_mods(not_found_pkg_names, parsed_args.version, true);
 				let modrinth_releases = new Array<modrinth.Version>();
 
-				util.print_note(`Searching through modrinth for ${not_found_pkg_names.join(", ")}..`);
-				
 				for(const pkg of modrinth_pkg_objects) {
 					modrinth_releases.push(modrinth.get_desired_release(pkg, parsed_args.version));
 				}
-				console.log(modrinth_releases);
 				util.print_note("From Modrinth:")
 				for(const rel of modrinth_releases) {
-					// console.log(rel);
 					modrinth.print_version(rel);
 					modrinth.download_release(rel);
 				}
@@ -169,6 +163,7 @@ async function main(){
 			util.print_package(pkg);
 		}
 		if(config.search_modrinth && parsed_args.words.length != desired_pkg_objects.size) {
+
 			let not_found_pkg_names = new Array<string>();
 			let     found_pkg_names = new Array<string>();
 				
@@ -182,11 +177,13 @@ async function main(){
 				}
 			}
 
-			let modrinth_pkg_objects = new Array<modrinth.ModResult>();
-			for(const name of not_found_pkg_names) {
-				modrinth_pkg_objects = modrinth_pkg_objects.concat(modrinth.search_mod(name, parsed_args.version));
-			}
+			let modrinth_pkg_objects = await modrinth.search_mods(not_found_pkg_names, parsed_args.version, true);
+			
+			// for(const name of not_found_pkg_names) {
+			// 	modrinth_pkg_objects = modrinth_pkg_objects.concat(modrinth.search_mod(name, parsed_args.version));
+			// }
 			util.print_note(`Searching through modrinth for ${not_found_pkg_names.join(", ")}..`);
+			console.log(modrinth_pkg_objects)
 			for(const pkg of modrinth_pkg_objects) {
 				modrinth.print_package(modrinth.modrinth_to_internal(pkg));
 			}
