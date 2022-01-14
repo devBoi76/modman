@@ -18,12 +18,25 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.download_release = exports.get_desired_release = exports.print_version = exports.print_package = exports.get_mod_version = exports.get_mod_versions = exports.modrinth_to_internal = exports.search_mod = exports.ModirinthPackage = exports.VersionFile = exports.Version = exports.ModResult = void 0;
+exports.download_release = exports.get_desired_release = exports.print_version = exports.print_package = exports.get_mod_version = exports.get_mod_versions = exports.modrinth_to_internal = exports.search_mods = exports.search_mod = exports.ModirinthPackage = exports.VersionFile = exports.Version = exports.ModResult = void 0;
 const packages = __importStar(require("./package"));
 const util = __importStar(require("./util"));
 const https = __importStar(require("https"));
 const fs = __importStar(require("fs"));
+const node_fetch_1 = __importDefault(require("node-fetch"));
 const api_url = "https://api.modrinth.com";
 class ModResult {
 }
@@ -55,6 +68,31 @@ function search_mod(query, version) {
     return j_res;
 }
 exports.search_mod = search_mod;
+function search_mods(query, version) {
+    return __awaiter(this, void 0, void 0, function* () {
+        console.log(query);
+        let promises = new Array();
+        for (const q of query) {
+            promises.push(node_fetch_1.default(`${api_url}/api/v1/mod?query=${q}&&versions="version=${version}"`));
+        }
+        let resolved_promises = yield Promise.all(promises);
+        let hits = new Array();
+        for (let i = 0; i < resolved_promises.length; i++) {
+            hits.push(yield resolved_promises[i].json());
+        }
+        let mods = hits.flatMap((hit) => {
+            return hit.hits;
+        });
+        // let j_res: Array<ModResult> = mod_results.hits;
+        if (mods.length == 0) {
+            util.print_error("Could not find any packages on modrinth");
+            process.exit();
+        }
+        mods = mods.filter((mod) => { return util.biggest_similarity(mod.title, query) > 0.6; });
+        return mods;
+    });
+}
+exports.search_mods = search_mods;
 function modrinth_to_internal(mod_res) {
     let versions = get_mod_versions(mod_res.mod_id.replace("local-", ""));
     return new ModirinthPackage(mod_res.mod_id, mod_res.title, mod_res.description, versions, mod_res.downloads);

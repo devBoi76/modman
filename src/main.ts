@@ -6,7 +6,6 @@ import * as configuration from "./configuration";
 import * as api from "./api";
 import * as modrinth from "./modrinth_api";
 import * as fs from "fs";
-import { fileURLToPath } from "url";
 
 async function main(){
 	//ensure that a file at ./modman/conf.js is accesible
@@ -80,12 +79,12 @@ async function main(){
 					}
 				}
 
-				let modrinth_pkg_objects = new Array<modrinth.ModResult>();
-
-				for(const name of not_found_pkg_names) {
-					modrinth_pkg_objects.push(modrinth.search_mod(name, parsed_args.version)[0]);
-				}
-
+				//let modrinth_pkg_objects_promises = new Array<Promise<modrinth.ModResult>>();
+				
+				util.print_debug("starting search")
+				
+				let modrinth_pkg_objects = await modrinth.search_mods(not_found_pkg_names, parsed_args.version);// = await Promise.all(modrinth_pkg_objects_promises);
+				util.print_debug("stopped")
 				let modrinth_releases = new Array<modrinth.Version>();
 
 				util.print_note(`Searching through modrinth for ${not_found_pkg_names.join(", ")}..`);
@@ -93,8 +92,10 @@ async function main(){
 				for(const pkg of modrinth_pkg_objects) {
 					modrinth_releases.push(modrinth.get_desired_release(pkg, parsed_args.version));
 				}
+				console.log(modrinth_releases);
 				util.print_note("From Modrinth:")
 				for(const rel of modrinth_releases) {
+					// console.log(rel);
 					modrinth.print_version(rel);
 					modrinth.download_release(rel);
 				}

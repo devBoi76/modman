@@ -19,7 +19,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.similarity = exports.get_help = exports.get_sync = exports.arr_eq = exports.range = exports.print_package = exports.print_release = exports.print_note = exports.print_error = exports.ask_user = exports.colors = exports.possible_args = exports.possible_options = void 0;
+exports.similarity = exports.biggest_similarity = exports.get_help = exports.get_sync = exports.arr_eq = exports.range = exports.print_package = exports.print_release = exports.print_debug = exports.print_note = exports.print_error = exports.ask_user = exports.colors = exports.possible_args = exports.possible_options = void 0;
 let prmpt = require("prompt-sync")({ sigint: true });
 const packages = __importStar(require("./package"));
 // var XMLHttpRequest = require("xmlhttprequest");
@@ -51,6 +51,7 @@ exports.colors = {
     BgRedBright: "\x1b[101m",
     BgGreen: "\x1b[42m",
     BgYellow: "\x1b[43m",
+    BgYellowBright: "\x1b[103m",
     BgBlue: "\x1b[44m",
     BgMagenta: "\x1b[45m",
     BgCyan: "\x1b[46m",
@@ -70,6 +71,10 @@ function print_note(text) {
     console.log(`${exports.colors.BgCyan}${exports.colors.FgBlack}[NOTE]${exports.colors.Reset} ${text}`);
 }
 exports.print_note = print_note;
+function print_debug(text) {
+    console.log(`${exports.colors.BgYellowBright + exports.colors.FgBlack}[DEBUG]${exports.colors.Reset + exports.colors.Dim} ${text + exports.colors.Reset}`);
+}
+exports.print_debug = print_debug;
 function print_release(release, known_packages) {
     let a = packages.id_to_object(release.parent_package_id, known_packages);
     if (release.is_dependency) {
@@ -123,6 +128,16 @@ function get_help() {
     console.log("`modman install --version <minecraft version>` - download the package for a specified version");
 }
 exports.get_help = get_help;
+function biggest_similarity(s1, strs) {
+    let max = 0;
+    for (const str of strs) {
+        if (similarity(s1, str) > max) {
+            max = similarity(s1, str);
+        }
+    }
+    return max;
+}
+exports.biggest_similarity = biggest_similarity;
 function similarity(s1, s2) {
     let longer = s1;
     let shorter = s2;

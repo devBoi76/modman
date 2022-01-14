@@ -2,7 +2,7 @@ import * as packages from "./package";
 import * as util from "./util"
 import * as https from "https"
 import * as fs from "fs"
-
+import fetch from "node-fetch";
 const api_url = "https://api.modrinth.com"
 
 export class ModResult {
@@ -68,8 +68,34 @@ export function search_mod(query: string, version: string): Array<ModResult> {
         util.print_error("Could not find any packages on modrinth");
         process.exit();
     }
-    j_res.filter( (mod) => { return util.similarity(mod.title, query) > 0.6});
+    j_res = j_res.filter( (mod) => { return util.similarity(mod.title, query) > 0.6});
     return j_res;
+}
+
+export async function search_mods(query: Array<string>, version: string): Promise<Array<ModResult>> {
+    console.log(query)
+    let promises = new Array<Promise<Response>>();
+    
+    for(const q of query) {
+        promises.push(fetch(`${api_url}/api/v1/mod?query=${q}&&versions="version=${version}"`));
+    }
+    
+    let resolved_promises = await Promise.all(promises);
+    
+    let hits = new Array();
+    for(let i = 0; i <  resolved_promises.length; i++) {
+        hits.push(await resolved_promises[i].json());
+    }
+    let mods = hits.flatMap( (hit) => {
+        return hit.hits;
+    });
+    // let j_res: Array<ModResult> = mod_results.hits;
+    if(mods.length == 0) {
+        util.print_error("Could not find any packages on modrinth");
+        process.exit();
+    }
+    mods = mods.filter( (mod) => { return util.biggest_similarity(mod.title, query) > 0.6});
+    return mods;
 }
 
 export function modrinth_to_internal(mod_res: ModResult): ModirinthPackage {

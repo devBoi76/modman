@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sat Jan  8 13:14:46 2022
+# Make data base, printed on Fri Jan 14 19:10:07 2022
 
 # Variables
 
@@ -19,7 +19,7 @@ LC_ALL = C
 # environment
 GTK_RC_FILES = /etc/gtk/gtkrc:/home/jan/.gtkrc:/home/jan/.config/gtkrc
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-fcbe2b6f-2d5c-49bc-bebe-a019b9933f84.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-12262afc-21eb-43a9-a23a-c95bf2271eaf.sock
 # environment
 MANDATORY_PATH = /usr/share/gconf/plasma.mandatory.path
 # environment
@@ -55,7 +55,7 @@ VSCODE_LOG_STACK = false
 # environment
 VSCODE_CODE_CACHE_PATH = /home/jan/.config/VSCodium/CachedData/899d46d82c4c95423fb7e10e68eba52050e30ba3
 # environment
-XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session1
+XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session0
 # environment
 LANG = C
 # environment
@@ -75,11 +75,9 @@ APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
 # environment
-PAM_KWALLET5_LOGIN = /run/user/1000/kwallet5.socket
-# environment
 MFLAGS = -pqrR
 # environment
-SSH_AUTH_SOCK = /tmp/ssh-3FSUuS15XcQ9/agent.4033
+SSH_AUTH_SOCK = /tmp/ssh-jU51frzPJtv7/agent.1134
 # default
 .SHELLFLAGS := -c
 # environment
@@ -99,13 +97,13 @@ MAKEFILE_LIST := Makefile
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_PID = 6678
+VSCODE_PID = 49832
 # environment
 XDG_SESSION_TYPE = x11
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # environment
-SESSION_MANAGER = local/komp:@/tmp/.ICE-unix/4313,unix/komp:/tmp/.ICE-unix/4313
+SESSION_MANAGER = local/komp:@/tmp/.ICE-unix/1358,unix/komp:/tmp/.ICE-unix/1358
 # automatic
 *F = $(notdir $*)
 # environment
@@ -189,7 +187,7 @@ MAKE_VERSION := 4.3
 # environment
 LC_MEASUREMENT = pl_PL.UTF-8
 # environment
-SSH_AGENT_PID = 4113
+SSH_AGENT_PID = 1218
 # environment
 _ = /usr/share/codium/codium
 # environment
@@ -213,7 +211,7 @@ ELECTRON_RUN_AS_NODE = 1
 # environment
 VSCODE_IPC_HOOK = /run/user/1000/vscode-99d86857-1.63.2-main.sock
 # environment
-XDG_SESSION_ID = 3
+XDG_SESSION_ID = 1
 # environment
 XCURSOR_SIZE = 24
 # environment
@@ -235,7 +233,7 @@ KDE_FULL_SESSION = true
 # environment
 LC_IDENTIFICATION = pl_PL.UTF-8
 # variable set hash-table stats:
-# Load=111/1024=11%, Rehash=0, Collisions=6/141=4%
+# Load=110/1024=11%, Rehash=0, Collisions=6/140=4%
 
 # Pattern-specific Variable Values
 
@@ -243,17 +241,36 @@ LC_IDENTIFICATION = pl_PL.UTF-8
 
 # Directories
 
-# src (device 66307, inode 11813229): 7 files, no impossibilities.
-# . (device 66307, inode 11812953): 16 files, no impossibilities.
-# out (device 66307, inode 11813110): 15 files, no impossibilities.
+# src (device 66307, inode 11813229): 8 files, no impossibilities.
+# . (device 66307, inode 11812953): 17 files, no impossibilities.
+# out (device 66307, inode 11813110): 19 files, no impossibilities.
 
-# 38 files, no impossibilities in 3 directories.
+# 44 files, no impossibilities in 3 directories.
 
 # Implicit Rules
 
 # No implicit rules.
 
 # Files
+
+# Not a target:
+out/api_direct.js:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+ 
+#  File has not been updated.
+
+# Not a target:
+out/modrinth_api.js:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+out/api_direct.js.map:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 # Not a target:
 src/api.ts:
@@ -292,7 +309,13 @@ out/main.js.map:
 #  Modification time never checked.
 #  File has not been updated.
 
-clean: out/api.js out/api.js.map out/configuration.js out/configuration.js.map out/download.js out/download.js.map out/main.js out/main.js.map out/package.js out/package.js.map out/program.js.map out/util.js out/util.js.map
+# Not a target:
+out/modrinth_api.js.map:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+clean: out/api.js out/api.js.map out/api_direct.js out/api_direct.js.map out/configuration.js out/configuration.js.map out/download.js out/download.js.map out/main.js out/main.js.map out/modrinth_api.js out/modrinth_api.js.map out/package.js out/package.js.map out/program.js.map out/util.js out/util.js.map
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -307,7 +330,6 @@ out/util.js:
 
 # Not a target:
 out/api.js:
- 
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -361,7 +383,7 @@ src/configuration.ts:
 #  Modification time never checked.
 #  File has not been updated.
 
-build: src/api.ts src/configuration.ts src/main.ts src/package.ts src/util.ts
+build: src/api.ts src/configuration.ts src/main.ts src/modrinth_api.ts src/package.ts src/util.ts
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -393,25 +415,31 @@ out/package.js:
 #  File has not been updated.
 
 # Not a target:
+src/modrinth_api.ts:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
 out/download.js.map:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 
 # files hash-table stats:
-# Load=24/1024=2%, Rehash=0, Collisions=2/52=4%
+# Load=29/1024=3%, Rehash=0, Collisions=2/62=3%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 59 / storage = 735 B / avg = 12 B
-# current buf: size = 8162 B / used = 735 B / count = 59 / avg = 12 B
+# strcache buffers: 1 (0) / strings = 70 / storage = 975 B / avg = 13 B
+# current buf: size = 8162 B / used = 975 B / count = 70 / avg = 13 B
 
-# strcache performance: lookups = 71 / hit rate = 16%
+# strcache performance: lookups = 82 / hit rate = 14%
 # hash-table stats:
-# Load=59/8192=1%, Rehash=0, Collisions=0/71=0%
-# Finished Make data base on Sat Jan  8 13:14:46 2022
+# Load=70/8192=1%, Rehash=0, Collisions=0/82=0%
+# Finished Make data base on Fri Jan 14 19:10:07 2022
 
  

@@ -33,6 +33,7 @@ export const colors = {
 	BgRedBright: "\x1b[101m",
 	BgGreen: "\x1b[42m",
 	BgYellow: "\x1b[43m",
+	BgYellowBright: "\x1b[103m",
 	BgBlue: "\x1b[44m",
 	BgMagenta: "\x1b[45m",
 	BgCyan: "\x1b[46m",
@@ -49,6 +50,10 @@ export function print_error(text: string) {
 }
 export function print_note(text: string) {
 	console.log(`${colors.BgCyan}${colors.FgBlack}[NOTE]${colors.Reset} ${text}`);
+}
+
+export function print_debug(text: string) {
+	console.log(`${colors.BgYellowBright + colors.FgBlack}[DEBUG]${colors.Reset + colors.Dim} ${text + colors.Reset}`);
 }
 
 export function print_release(release: packages.Release, known_packages: Array<packages.Package>): void {
@@ -104,7 +109,17 @@ export function get_help() {
 	console.log("`modman install --version <minecraft version>` - download the package for a specified version");
 }
 
-export function similarity(s1: string, s2: string) {
+export function biggest_similarity(s1: string, strs: Array<string>): number {
+	let max: number = 0;
+	for(const str of strs) {
+		if(similarity(s1, str) > max) {
+			max = similarity(s1, str);
+		}
+	}
+	return max;
+}
+
+export function similarity(s1: string, s2: string): number {
 	let longer = s1;
 	let shorter = s2;
 	if (s1.length < s2.length) {
