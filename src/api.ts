@@ -1,4 +1,3 @@
-import * as http from "http"
 import * as util from "./util"
 import * as fs from "fs"
 import * as packages from "./package"
@@ -10,9 +9,15 @@ var FormData = require('form-data');
 export function download_release(release: packages.Release, known_packages) {
     let parent_pkg = packages.id_to_object(release.parent_package_id, known_packages);
     const file = fs.createWriteStream(parent_pkg.name + "_" + release.game_version + "_v_" + release.version + ".jar")
-    http.get(`${parent_pkg.repository}/v1/download_release/${parent_pkg.repository_id}/${release.id}`, (response) => {
-        response.pipe(file);
-    });
+    if(release.prefer_link) {
+        util.adapter_for(release.direct_link).get(release.direct_link, (response) => {
+            response.pipe(file);
+        })
+    } else {
+        util.adapter_for(parent_pkg.repository).get(`${parent_pkg.repository}/v1/download_release/${parent_pkg.repository_id}/${release.id}`, (response) => {
+            response.pipe(file);
+        });
+    }
 }
 
 export function get_available_packages(repo: string, as_json?: boolean) {

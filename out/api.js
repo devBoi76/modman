@@ -20,7 +20,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.upload_release_file = exports.create_release = exports.create_package = exports.sync_all_repos = exports.remove_repo = exports.add_repos = exports.sync_packages_one_repo = exports.get_available_packages = exports.download_release = void 0;
-const http = __importStar(require("http"));
 const util = __importStar(require("./util"));
 const fs = __importStar(require("fs"));
 const packages = __importStar(require("./package"));
@@ -29,9 +28,16 @@ var FormData = require('form-data');
 function download_release(release, known_packages) {
     let parent_pkg = packages.id_to_object(release.parent_package_id, known_packages);
     const file = fs.createWriteStream(parent_pkg.name + "_" + release.game_version + "_v_" + release.version + ".jar");
-    http.get(`${parent_pkg.repository}/v1/download_release/${parent_pkg.repository_id}/${release.id}`, (response) => {
-        response.pipe(file);
-    });
+    if (release.prefer_link) {
+        util.adapter_for(release.direct_link).get(release.direct_link, (response) => {
+            response.pipe(file);
+        });
+    }
+    else {
+        util.adapter_for(parent_pkg.repository).get(`${parent_pkg.repository}/v1/download_release/${parent_pkg.repository_id}/${release.id}`, (response) => {
+            response.pipe(file);
+        });
+    }
 }
 exports.download_release = download_release;
 function get_available_packages(repo, as_json) {

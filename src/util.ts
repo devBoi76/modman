@@ -159,3 +159,15 @@ for (var i = 0; i <= s1.length; i++) {
 }
 return costs[s2.length];
 }
+
+export var adapter_for = (function() {
+	var url = require('url'),
+	  adapters = {
+		'http:': require('http'),
+		'https:': require('https'),
+	  };
+  
+	return function(inputUrl: string) {
+	  return adapters[url.parse(inputUrl).protocol]
+	}
+  }());

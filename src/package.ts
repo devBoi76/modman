@@ -13,6 +13,8 @@ export class Release {
     released: number; // utc timestamp
     is_dependency: boolean;
     downloads: number;
+    direct_link: string;
+    prefer_link: boolean;
 }
 
 export class Dependency {

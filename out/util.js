@@ -19,7 +19,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.similarity = exports.most_similar = exports.get_help = exports.get_sync = exports.arr_eq = exports.range = exports.print_package = exports.print_release = exports.print_debug = exports.print_note = exports.print_error = exports.ask_user = exports.colors = exports.possible_args = exports.possible_options = void 0;
+exports.adapter_for = exports.similarity = exports.most_similar = exports.get_help = exports.get_sync = exports.arr_eq = exports.range = exports.print_package = exports.print_release = exports.print_debug = exports.print_note = exports.print_error = exports.ask_user = exports.colors = exports.possible_args = exports.possible_options = void 0;
 let prmpt = require("prompt-sync")({ sigint: true });
 const packages = __importStar(require("./package"));
 // var XMLHttpRequest = require("xmlhttprequest");
@@ -176,4 +176,13 @@ function editDistance(s1, s2) {
     }
     return costs[s2.length];
 }
+exports.adapter_for = (function () {
+    var url = require('url'), adapters = {
+        'http:': require('http'),
+        'https:': require('https'),
+    };
+    return function (inputUrl) {
+        return adapters[url.parse(inputUrl).protocol];
+    };
+}());
 //# sourceMappingURL=util.js.map
