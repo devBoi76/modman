@@ -147,11 +147,13 @@ function release_compatible(release1, release2) {
 exports.release_compatible = release_compatible;
 function unify_indexes(indexes) {
     let id_counter = 0;
-    let total_ids = 0;
     let unified_index = [];
     for (const index of indexes) {
         for (const pkg of index) {
             pkg.id = id_counter;
+            for (let i = 0; i < pkg.releases.length; i++) {
+                pkg.releases[i].parent_package_id = id_counter;
+            }
             unified_index.push(pkg);
             id_counter += 1;
         }

@@ -151,11 +151,13 @@ export function release_compatible(release1: string, release2: string) {
 
 export function unify_indexes(indexes: Array<Array<Package>>) {
     let id_counter: number = 0;
-    let total_ids: number = 0;
     let unified_index: Array<Package> = []
     for(const index of indexes) {
         for(const pkg of index) {
             pkg.id = id_counter;
+            for(let i = 0; i < pkg.releases.length; i++) {
+                pkg.releases[i].parent_package_id = id_counter
+            }
             unified_index.push(pkg);
             id_counter += 1;
         }
