@@ -22,7 +22,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.adapter_for = exports.similarity = exports.most_similar = exports.get_help = exports.get_sync = exports.arr_eq = exports.range = exports.print_package = exports.print_release = exports.print_debug = exports.print_note = exports.print_error = exports.ask_user = exports.colors = exports.possible_args = exports.possible_options = void 0;
 let prmpt = require("prompt-sync")({ sigint: true });
 const packages = __importStar(require("./package"));
-// var XMLHttpRequest = require("xmlhttprequest");
 const xmlhpr = __importStar(require("xmlhttprequest"));
 exports.possible_options = ["install", "sync", "search", "list", "help", "add_repo", "remove_repo", "create_package", "create_release", "upload_release"];
 exports.possible_args = {
