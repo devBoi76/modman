@@ -8,31 +8,29 @@ import * as api from "./api";
 import * as modrinth from "./modrinth_api";
 import * as fs from "fs";
 
+// get config
+
+//ensure that a file at ./modman/conf.js is accesible
+configuration.ensure_file();
+const args = process.argv;
+const options = args.slice(2);
+if(options.length == 0){
+	util.print_error("No options provided")
+	util.print_note(`Possible options: ${util.possible_options.join(", ")}`)
+	process.exit();
+}
+if(!util.possible_options.includes(options[0])){
+	util.print_error(`Unknown option: \`${options[0]}\``);
+	util.print_note(`Possible options: ${util.possible_options.join(", ")}`)
+	process.exit();
+}
+// make configuration
+let parsed_args = configuration.parse_args(options); // removes options
+parsed_args.mods_folder = context.point_to_mods_folder()
+parsed_args.config_folder = context.point_to_modman_folder()
+let config = JSON.parse(fs.readFileSync(parsed_args.config_folder+"/conf.json", "utf8"));
+
 async function main(){
-	//ensure that a file at ./modman/conf.js is accesible
-	configuration.ensure_file();
-
-	// api.sync_all_repos()
-	// parse arguments
-	const args = process.argv;
-	const options = args.slice(2);
-	
-	if(options.length == 0){
-		util.print_error("No options provided")
-		util.print_note(`Possible options: ${util.possible_options.join(", ")}`)
-		process.exit();
-	}
-	if(!util.possible_options.includes(options[0])){
-		util.print_error(`Unknown option: \`${options[0]}\``);
-		util.print_note(`Possible options: ${util.possible_options.join(", ")}`)
-		process.exit();
-	}
-	// make configuration
-	let parsed_args = configuration.parse_args(options); // removes options
-	let config = JSON.parse(fs.readFileSync("./.modman/conf.json", "utf8"));
-	parsed_args.mods_folder = context.point_to_mods_folder()
-	
-
 	switch(parsed_args.operation){
 		case "install": {
 			if(parsed_args.words.length == 0) {
@@ -40,7 +38,7 @@ async function main(){
 				util.print_note("example usage is `./main.js install JEI`");
 				process.exit();
 			}
-			let known_packages = packages.read_pkg_json();
+			let known_packages = packages.read_pkg_json(parsed_args.config_folder);
 			let desired_pkg_names = parsed_args.words;
 			let desired_pkg_objects: Set<packages.Package> = packages.names_to_objects(desired_pkg_names, known_packages, !config.search_modrinth); // Set
 			
@@ -160,7 +158,7 @@ async function main(){
 				util.print_note("example usage is `./main.js search JEI`");
 				process.exit();
 			}
-		let known_packages = packages.read_pkg_json();
+		let known_packages = packages.read_pkg_json(parsed_args.config_folder);
 		let desired_pkg_names = parsed_args.words;
 		let desired_pkg_objects: Set<packages.Package> = packages.names_to_objects(desired_pkg_names, known_packages, !config.search_modrinth);
 		for (const pkg of desired_pkg_objects) {
@@ -197,7 +195,7 @@ async function main(){
 		break;
 		}
 		case "list": {
-			let known_packages = packages.read_pkg_json();
+			let known_packages = packages.read_pkg_json(parsed_args.config_folder);
 			util.print_note(`${known_packages.length} packages available`);
 			util.print_note("To update your repositories, type `modman sync`\n")
 			for (const pkg of known_packages) {

@@ -6,9 +6,9 @@ import * as configuration from "./configuration"
 var FormData = require('form-data');
 
 
-export function download_release(release: packages.Release, mods_folder: Array<string>, known_packages) {
+export function download_release(release: packages.Release, mods_folder: string, known_packages) {
     let parent_pkg = packages.id_to_object(release.parent_package_id, known_packages);
-    const file = fs.createWriteStream("/"+mods_folder.join("/")+"/" + parent_pkg.name + "_" + release.game_version + "_v_" + release.version + ".jar")
+    const file = fs.createWriteStream(mods_folder+"/" + parent_pkg.name + "_" + release.game_version + "_v_" + release.version + ".jar")
     if(release.prefer_link) {
         util.adapter_for(release.direct_link).get(release.direct_link, (response) => {
             response.pipe(file);
@@ -31,7 +31,7 @@ export function get_available_packages(repo: string, as_json?: boolean) {
     if(as_json === true) {
         return JSON.parse(resp);
     }
-    return repo;
+    return resp;
 }
 
 export function sync_packages_one_repo(repo: string) {
@@ -59,6 +59,9 @@ export function add_repos(repos: Array<string>) {
     }
     config.repos = config.repos.concat(repo_objs);
     fs.writeFileSync("./.modman/conf.json", JSON.stringify(config));
+    for(const repo of repos) {
+        sync_packages_one_repo(repo);
+    }
 }
 
 export function remove_repo(repo: string) {

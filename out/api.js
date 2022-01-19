@@ -27,7 +27,7 @@ const configuration = __importStar(require("./configuration"));
 var FormData = require('form-data');
 function download_release(release, mods_folder, known_packages) {
     let parent_pkg = packages.id_to_object(release.parent_package_id, known_packages);
-    const file = fs.createWriteStream("/" + mods_folder.join("/") + "/" + parent_pkg.name + "_" + release.game_version + "_v_" + release.version + ".jar");
+    const file = fs.createWriteStream(mods_folder + "/" + parent_pkg.name + "_" + release.game_version + "_v_" + release.version + ".jar");
     if (release.prefer_link) {
         util.adapter_for(release.direct_link).get(release.direct_link, (response) => {
             response.pipe(file);
@@ -50,7 +50,7 @@ function get_available_packages(repo, as_json) {
     if (as_json === true) {
         return JSON.parse(resp);
     }
-    return repo;
+    return resp;
 }
 exports.get_available_packages = get_available_packages;
 function sync_packages_one_repo(repo) {
@@ -78,6 +78,9 @@ function add_repos(repos) {
     }
     config.repos = config.repos.concat(repo_objs);
     fs.writeFileSync("./.modman/conf.json", JSON.stringify(config));
+    for (const repo of repos) {
+        sync_packages_one_repo(repo);
+    }
 }
 exports.add_repos = add_repos;
 function remove_repo(repo) {

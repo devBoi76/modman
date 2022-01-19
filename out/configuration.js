@@ -23,13 +23,15 @@ exports.ensure_repos = exports.ensure_file = exports.parse_args = void 0;
 const fs = __importStar(require("fs"));
 const util = __importStar(require("./util"));
 const api = __importStar(require("./api"));
+const context = __importStar(require("./context"));
 function parse_args(options) {
     let parsed_args = {
         operation: "install",
         version: "1.16",
         install_method: "latest",
         words: [],
-        mods_folder: []
+        mods_folder: "",
+        config_folder: ""
     };
     while (options.length != 0) {
         let o = options.shift();
@@ -67,43 +69,48 @@ function parse_args(options) {
     return parsed_args;
 }
 exports.parse_args = parse_args;
-function create_template_file() {
+function create_template_file(fold) {
     // const writer = fs.createWriteStream("./.modman/conf.json", {flags: "w"});
     const default_json = {
         game_version: "1.16",
         repos: [],
         search_modrinth: false
     };
-    fs.writeFileSync("./.modman/conf.json", JSON.stringify(default_json));
+    fs.writeFileSync(fold + "/conf.json", JSON.stringify(default_json));
 }
 ;
-function create_template_idx_file() {
+function create_template_idx_file(fold) {
     // const writer = fs.createWriteStream("./.modman/pkg_idx.json", {flags: "w"});
     // writer.write(api.get_available_packages("http://localhost:5000"));
-    fs.writeFileSync("./.modman/pkg_idx.json", api.get_available_packages("http://localhost:5000"));
+    fs.writeFileSync(fold + "/pkg_idx.json", api.get_available_packages("http://localhost:5000"));
 }
 ;
 function ensure_file() {
     try {
+        let fold = "";
         try {
-            fs.accessSync("./.modman");
+            fold = context.point_to_modman_folder();
         }
         catch (err) {
+            fold = "";
+        }
+        if (fold.length == 0) {
             fs.mkdirSync("./.modman");
+            fold = context.point_to_modman_folder();
         }
         try {
-            fs.accessSync("./.modman/conf.json");
+            fs.accessSync(fold + "/conf.json");
         }
         catch (err) {
             // console.error(err);
-            create_template_file();
+            create_template_file(fold);
         }
         try {
-            fs.accessSync("./.modman/pkg_idx.json");
+            fs.accessSync(fold + "/pkg_idx.json");
         }
         catch (err) {
             // console.error(err);
-            create_template_idx_file();
+            create_template_idx_file(fold);
         }
     }
     catch (err) {
@@ -113,7 +120,9 @@ function ensure_file() {
 exports.ensure_file = ensure_file;
 ;
 function ensure_repos() {
-    let config = JSON.parse(fs.readFileSync("./.modman/conf.json", "utf8"));
+    let fold = context.point_to_modman_folder();
+    util.print_debug(fold);
+    let config = JSON.parse(fs.readFileSync(fold + "/conf.json", "utf8"));
     if (config.repos.length == 0) {
         util.print_error("You haven't added any repositories");
         util.print_error("Add one with `modman add_repo <repository_url>`");

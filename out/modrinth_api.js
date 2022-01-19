@@ -156,7 +156,7 @@ function get_desired_release(pkg, game_version) {
 }
 exports.get_desired_release = get_desired_release;
 function download_release(release, mods_folder) {
-    const file = fs.createWriteStream("/" + mods_folder.join("/") + "/" + release.files[0].filename);
+    const file = fs.createWriteStream(mods_folder + "/" + release.files[0].filename);
     https.get(release.files[0].url, (response) => {
         response.pipe(file);
     });

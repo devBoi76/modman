@@ -60,16 +60,16 @@ function get_total_downloads(pkg) {
     return all;
 }
 exports.get_total_downloads = get_total_downloads;
-function read_pkg_json() {
+function read_pkg_json(conf_fold) {
     let file = undefined;
     let json = undefined;
     configuration.ensure_repos();
     try {
-        file = fs.readFileSync("./.modman/pkg_idx.json", "utf8");
+        file = fs.readFileSync(conf_fold + "/pkg_idx.json", "utf8");
         json = JSON.parse(file);
     }
     catch (err) {
-        util.print_error("Could not read ./.modman/pkg_idx.json");
+        util.print_error("Could not read " + conf_fold + "/pkg_idx.json");
         util.print_note("Perhaps you haven't added any repositories. Consider adding one with `modman add_repo <repository url>`");
         process.exit();
     }
