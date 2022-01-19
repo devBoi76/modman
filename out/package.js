@@ -19,7 +19,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.unify_indexes = exports.release_compatible = exports.get_desired_release = exports.id_to_object = exports.names_to_objects = exports.read_pkg_json = exports.get_total_downloads = exports.Repository = exports.Package = exports.Dependency = exports.Release = void 0;
+exports.unify_indexes = exports.release_compatible = exports.get_desired_release = exports.repo_id_to_object = exports.id_to_object = exports.names_to_objects = exports.read_pkg_json = exports.get_total_downloads = exports.Repository = exports.Package = exports.Dependency = exports.Release = void 0;
 const fs = __importStar(require("fs"));
 const configuration = __importStar(require("./configuration"));
 const util = __importStar(require("./util"));
@@ -119,6 +119,18 @@ function id_to_object(id, known_packages) {
     return known_packages.filter(pkg => pkg.id === id)[0];
 }
 exports.id_to_object = id_to_object;
+function repo_id_to_object(known_packages, repo_id, repo) {
+    known_packages = known_packages.filter((pkg) => {
+        pkg.repository_id == repo_id;
+    });
+    if (repo) {
+        known_packages = known_packages.filter((pkg) => {
+            pkg.repository == repo;
+        });
+    }
+    return known_packages[0];
+}
+exports.repo_id_to_object = repo_id_to_object;
 function get_desired_release(pkg, game_version, release_version) {
     // NOTE: Uses `latest` unless a version is specified
     let options = pkg.releases.filter((value) => {

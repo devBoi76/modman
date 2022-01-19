@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Mon Jan 17 18:37:57 2022
+# Make data base, printed on Wed Jan 19 14:03:28 2022
 
 # Variables
 
@@ -17,21 +17,19 @@ GDK_BACKEND = x11
 # environment
 LC_ALL = C
 # environment
+NO_AT_BRIDGE = 1
+# environment
 GTK_RC_FILES = /etc/gtk/gtkrc:/home/jan/.gtkrc:/home/jan/.config/gtkrc
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-1c4d8ffd-6277-4e84-a75c-6e977beef4d5.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-080be75f-4033-42c6-8b50-21b4d3ae67cc.sock
 # environment
 MANDATORY_PATH = /usr/share/gconf/plasma.mandatory.path
-# environment
-KONSOLE_DBUS_SERVICE = :1.145
 # environment
 LC_NAME = pl_PL.UTF-8
 # environment
 LC_NUMERIC = pl_PL.UTF-8
 # environment
 VSCODE_CWD = /home/dev
-# environment
-WINDOWID = 46137351
 # environment
 LC_ADDRESS = pl_PL.UTF-8
 # default
@@ -40,8 +38,6 @@ MAKE_COMMAND := make
 QT_ACCESSIBILITY = 1
 # automatic
 @D = $(patsubst %/,%,$(dir $@))
-# environment
-KONSOLE_VERSION = 210801
 # environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # default
@@ -52,8 +48,6 @@ PWD = /home/dev/modman
 %D = $(patsubst %/,%,$(dir $%))
 # environment
 XDG_DATA_DIRS = /usr/share/plasma:/home/jan/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share:/usr/share:/var/lib/snapd/desktop
-# environment
-KONSOLE_DBUS_WINDOW = /Windows/1
 # automatic
 ^D = $(patsubst %/,%,$(dir $^))
 # environment
@@ -72,8 +66,6 @@ XAUTHORITY = /home/jan/.Xauthority
 .LOADED := 
 # default
 .INCLUDE_DIRS = /usr/local/include /usr/include /usr/include
-# environment
-COLORFGBG = 15;0
 # makefile
 MAKEFLAGS = pqrR
 # makefile
@@ -82,14 +74,12 @@ CURDIR := /home/dev/modman
 VSCODE_PIPE_LOGGING = true
 # environment
 APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
-# environment
-LESSOPEN = | /usr/bin/lesspipe %s
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
 # environment
 MFLAGS = -pqrR
 # environment
-SSH_AUTH_SOCK = /tmp/ssh-shPg7fRD2Dyv/agent.1163
+SSH_AUTH_SOCK = /tmp/ssh-AJ6TDJyQwb2g/agent.1166
 # default
 .SHELLFLAGS := -c
 # environment
@@ -109,7 +99,7 @@ MAKEFILE_LIST := Makefile
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_PID = 18319
+VSCODE_PID = 9552
 # environment
 XDG_SESSION_TYPE = x11
 # automatic
@@ -137,8 +127,6 @@ XMODIFIERS = @im=ibus
 # environment
 SHLVL = 0
 # environment
-PROFILEHOME = 
-# environment
 MAKELEVEL := 0
 # default
 MAKE = $(MAKE_COMMAND)
@@ -147,21 +135,17 @@ PATH = /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/
 # default
 MAKEFILES := 
 # environment
-LANGUAGE = 
-# environment
 LC_MONETARY = pl_PL.UTF-8
 # automatic
 ^F = $(notdir $^)
 # environment
 LC_TIME = pl_PL.UTF-8
 # environment
-INVOCATION_ID = e51ed05b82744340951404d66fd6ddb6
+INVOCATION_ID = 75b261669c1d4e75b0906156019bc584
 # environment
 VSCODE_LOG_NATIVE = false
 # environment
 LC_TELEPHONE = pl_PL.UTF-8
-# environment
-LESSCLOSE = /usr/bin/lesspipe %s %s
 # automatic
 ?F = $(notdir $?)
 # environment
@@ -172,8 +156,6 @@ XDG_SEAT = seat0
 GTK_IM_MODULE = ibus
 # environment
 XDG_CURRENT_DESKTOP = KDE
-# environment
-LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:
 # automatic
 +F = $(notdir $+)
 # environment
@@ -205,25 +187,22 @@ KDE_SESSION_UID = 1000
 # default
 MAKE_VERSION := 4.3
 # environment
-KONSOLE_DBUS_SESSION = /Sessions/1
-# environment
-MANAGERPID = 1152
+MANAGERPID = 1155
 # environment
 LC_MEASUREMENT = pl_PL.UTF-8
 # environment
-SSH_AGENT_PID = 1247
+SSH_AGENT_PID = 1250
 # environment
-_ = /usr/share/codium/codium
+_ = /usr/bin/dbus-update-activation-environment
 # environment
 LC_PAPER = pl_PL.UTF-8
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
+ 
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-COLORTERM = truecolor
-# environment
-JOURNAL_STREAM = 8:27228
+JOURNAL_STREAM = 8:31522
 # environment
 XDG_SESSION_CLASS = user
 # environment
@@ -239,8 +218,6 @@ ELECTRON_RUN_AS_NODE = 1
 # environment
 VSCODE_IPC_HOOK = /run/user/1000/vscode-99d86857-1.63.2-main.sock
 # environment
-TERM = xterm-256color
-# environment
 XDG_SESSION_ID = 1
 # environment
 XCURSOR_SIZE = 24
@@ -255,8 +232,6 @@ SUFFIXES :=
 # environment
 QT_AUTO_SCREEN_SCALE_FACTOR = 0
 # environment
-SHELL_SESSION_ID = 6d8af041fab04156bb2843746ebe5429
-# environment
 KDE_SESSION_VERSION = 5
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell nocomment grouped-target extra-prereqs archives jobserver output-sync check-symlink load
@@ -265,7 +240,7 @@ KDE_FULL_SESSION = true
 # environment
 LC_IDENTIFICATION = pl_PL.UTF-8
 # variable set hash-table stats:
-# Load=126/1024=12%, Rehash=0, Collisions=11/156=7%
+# Load=113/1024=11%, Rehash=0, Collisions=6/143=4%
 
 # Pattern-specific Variable Values
 
@@ -274,10 +249,10 @@ LC_IDENTIFICATION = pl_PL.UTF-8
 # Directories
 
 # src (device 66307, inode 11813229): 8 files, no impossibilities.
-# . (device 66307, inode 11812953): 20 files, no impossibilities.
+# . (device 66307, inode 11812953): 17 files, no impossibilities.
 # out (device 66307, inode 11813110): 19 files, no impossibilities.
 
-# 47 files, no impossibilities in 3 directories.
+# 44 files, no impossibilities in 3 directories.
 
 # Implicit Rules
 
@@ -301,7 +276,6 @@ out/modrinth_api.js:
 out/api_direct.js.map:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
- 
 #  File has not been updated.
 
 # Not a target:
@@ -407,6 +381,7 @@ all:
 #  Command line target.
 #  Implicit rule search has been done.
 #  File does not exist.
+ 
 #  File has not been updated.
 
 # Not a target:
@@ -466,13 +441,12 @@ out/download.js.map:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 73 / storage = 1082 B / avg = 14 B
- 
-# current buf: size = 8162 B / used = 1082 B / count = 73 / avg = 14 B
+# strcache buffers: 1 (0) / strings = 70 / storage = 945 B / avg = 13 B
+# current buf: size = 8162 B / used = 945 B / count = 70 / avg = 13 B
 
-# strcache performance: lookups = 85 / hit rate = 14%
+# strcache performance: lookups = 82 / hit rate = 14%
 # hash-table stats:
-# Load=73/8192=1%, Rehash=0, Collisions=0/85=0%
-# Finished Make data base on Mon Jan 17 18:37:57 2022
+# Load=70/8192=1%, Rehash=0, Collisions=0/82=0%
+# Finished Make data base on Wed Jan 19 14:03:28 2022
 
  

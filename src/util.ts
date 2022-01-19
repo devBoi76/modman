@@ -68,6 +68,7 @@ export function print_release(release: packages.Release, known_packages: Array<p
 export function print_package(pkg: packages.Package) {
 	console.log(`${colors.BgGreen}${colors.FgBlack}[Package]${colors.Reset} ${pkg.name} - ${pkg.description}`);
 	console.log(`| Total Downloads: ${packages.get_total_downloads(pkg)} | Repository: ${pkg.repository}`);
+	console.log(`| Authors: ${pkg.authors.join(", ")}`);
 	console.log(`| Releases:`);
 	if(pkg.releases.length == 0) {
 		console.log("| No releases found\n");

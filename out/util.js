@@ -87,6 +87,7 @@ exports.print_release = print_release;
 function print_package(pkg) {
     console.log(`${exports.colors.BgGreen}${exports.colors.FgBlack}[Package]${exports.colors.Reset} ${pkg.name} - ${pkg.description}`);
     console.log(`| Total Downloads: ${packages.get_total_downloads(pkg)} | Repository: ${pkg.repository}`);
+    console.log(`| Authors: ${pkg.authors.join(", ")}`);
     console.log(`| Releases:`);
     if (pkg.releases.length == 0) {
         console.log("| No releases found\n");

@@ -20,6 +20,7 @@ export class Release {
 export class Dependency {
     pkg_id: number;
     release_id: number;
+    repo: string;
 }
 
 export class Package {
@@ -29,6 +30,7 @@ export class Package {
     releases: Array<Release>;
     repository: string;
     repository_id: number;
+    authors: Array<string>;
     
     constructor(id: number, name: string, description: string, releases: Array<Release>, repository: string, repository_id: number) {
         this.id = id;
@@ -116,8 +118,20 @@ export function names_to_objects(package_names: Array<string>, known_packages: a
     return objects;
 }
 
-export function id_to_object(id: number, known_packages: any): Package {
+export function id_to_object(id: number, known_packages: Array<Package>): Package {
     return known_packages.filter(pkg => pkg.id === id)[0];    
+}
+
+export function repo_id_to_object(known_packages: Array<Package>, repo_id: number, repo?: string): Package {
+    known_packages = known_packages.filter( (pkg) => {
+        pkg.repository_id == repo_id
+    });
+    if(repo) {
+        known_packages = known_packages.filter( (pkg) => {
+            pkg.repository == repo
+        });
+    }
+    return known_packages[0]
 }
 
 export function get_desired_release(pkg: Package, game_version: string, release_version?: string): Release{
