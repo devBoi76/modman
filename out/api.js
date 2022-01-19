@@ -25,9 +25,9 @@ const fs = __importStar(require("fs"));
 const packages = __importStar(require("./package"));
 const configuration = __importStar(require("./configuration"));
 var FormData = require('form-data');
-function download_release(release, known_packages) {
+function download_release(release, mods_folder, known_packages) {
     let parent_pkg = packages.id_to_object(release.parent_package_id, known_packages);
-    const file = fs.createWriteStream(parent_pkg.name + "_" + release.game_version + "_v_" + release.version + ".jar");
+    const file = fs.createWriteStream("/" + mods_folder.join("/") + "/" + parent_pkg.name + "_" + release.game_version + "_v_" + release.version + ".jar");
     if (release.prefer_link) {
         util.adapter_for(release.direct_link).get(release.direct_link, (response) => {
             response.pipe(file);

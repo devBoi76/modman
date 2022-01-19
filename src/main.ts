@@ -3,6 +3,7 @@
 import * as util from "./util";
 import * as packages from "./package";
 import * as configuration from "./configuration";
+import * as context from "./context"
 import * as api from "./api";
 import * as modrinth from "./modrinth_api";
 import * as fs from "fs";
@@ -10,6 +11,7 @@ import * as fs from "fs";
 async function main(){
 	//ensure that a file at ./modman/conf.js is accesible
 	configuration.ensure_file();
+
 	// api.sync_all_repos()
 	// parse arguments
 	const args = process.argv;
@@ -28,6 +30,8 @@ async function main(){
 	// make configuration
 	let parsed_args = configuration.parse_args(options); // removes options
 	let config = JSON.parse(fs.readFileSync("./.modman/conf.json", "utf8"));
+	parsed_args.mods_folder = context.point_to_mods_folder()
+	
 
 	switch(parsed_args.operation){
 		case "install": {
@@ -61,7 +65,7 @@ async function main(){
 			}
 			desired_releases.forEach( (value) => {
 				util.print_release(value, known_packages);
-				api.download_release(value, known_packages);
+				api.download_release(value, parsed_args.mods_folder, known_packages);
 			});
 			
 			// BEGIN MODRINTH
@@ -91,7 +95,7 @@ async function main(){
 				util.print_note("From Modrinth:")
 				for(const rel of modrinth_releases) {
 					modrinth.print_version(rel);
-					modrinth.download_release(rel);
+					modrinth.download_release(rel, parsed_args.mods_folder);
 				}
 	
 			}

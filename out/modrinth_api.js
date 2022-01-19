@@ -155,8 +155,8 @@ function get_desired_release(pkg, game_version) {
     return all_vers.sort((ver1, ver2) => { return Date.parse(ver2.date_published) - Date.parse(ver1.date_published); })[0];
 }
 exports.get_desired_release = get_desired_release;
-function download_release(release) {
-    const file = fs.createWriteStream(release.files[0].filename);
+function download_release(release, mods_folder) {
+    const file = fs.createWriteStream("/" + mods_folder.join("/") + "/" + release.files[0].filename);
     https.get(release.files[0].url, (response) => {
         response.pipe(file);
     });

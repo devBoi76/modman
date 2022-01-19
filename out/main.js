@@ -32,6 +32,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const util = __importStar(require("./util"));
 const packages = __importStar(require("./package"));
 const configuration = __importStar(require("./configuration"));
+const context = __importStar(require("./context"));
 const api = __importStar(require("./api"));
 const modrinth = __importStar(require("./modrinth_api"));
 const fs = __importStar(require("fs"));
@@ -56,6 +57,7 @@ function main() {
         // make configuration
         let parsed_args = configuration.parse_args(options); // removes options
         let config = JSON.parse(fs.readFileSync("./.modman/conf.json", "utf8"));
+        parsed_args.mods_folder = context.point_to_mods_folder();
         switch (parsed_args.operation) {
             case "install": {
                 if (parsed_args.words.length == 0) {
@@ -86,7 +88,7 @@ function main() {
                 }
                 desired_releases.forEach((value) => {
                     util.print_release(value, known_packages);
-                    api.download_release(value, known_packages);
+                    api.download_release(value, parsed_args.mods_folder, known_packages);
                 });
                 // BEGIN MODRINTH
                 if (config.search_modrinth && desired_pkg_objects.size != parsed_args.words.length) {
@@ -109,7 +111,7 @@ function main() {
                     util.print_note("From Modrinth:");
                     for (const rel of modrinth_releases) {
                         modrinth.print_version(rel);
-                        modrinth.download_release(rel);
+                        modrinth.download_release(rel, parsed_args.mods_folder);
                     }
                 }
                 // END MODRINTH

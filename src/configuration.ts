@@ -1,13 +1,15 @@
 import * as fs from "fs"
 import * as util from "./util"
 import * as api from "./api"
+import * as context from "./context"
 
 export function parse_args(options: Array<string>) {
     let parsed_args = {
         operation: "install",
 		version: "1.16",
 		install_method: "latest",
-        words: []
+        words: [],
+		mods_folder: []
 	};
 	while(options.length != 0){
 		let o = options.shift()
@@ -63,7 +65,7 @@ function create_template_idx_file() {
 	fs.writeFileSync("./.modman/pkg_idx.json", api.get_available_packages("http://localhost:5000"))
 };
 
-export function ensure_file() {
+export function ensure_file() { // do stuff if detectsa mods folder
 	try {
 		try {
 			fs.accessSync("./.modman");

@@ -12,5 +12,6 @@
   },
   "bin": {
     "modman": "./out/main.js"
-  }
+  },
+  "name": "modman"
 }

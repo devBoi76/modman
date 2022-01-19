@@ -28,7 +28,8 @@ function parse_args(options) {
         operation: "install",
         version: "1.16",
         install_method: "latest",
-        words: []
+        words: [],
+        mods_folder: []
     };
     while (options.length != 0) {
         let o = options.shift();

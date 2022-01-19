@@ -161,8 +161,8 @@ export function get_desired_release(pkg: ModResult, game_version: string): Versi
     return all_vers.sort( (ver1, ver2) => {return Date.parse(ver2.date_published) - Date.parse(ver1.date_published)})[0]
 }
 
-export function download_release(release: Version) {
-    const file = fs.createWriteStream(release.files[0].filename);
+export function download_release(release: Version, mods_folder: Array<string>) {
+    const file = fs.createWriteStream("/"+mods_folder.join("/")+"/"+ release.files[0].filename);
     https.get(release.files[0].url, (response) => {
         response.pipe(file);
     });
