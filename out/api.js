@@ -19,7 +19,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.upload_release_file = exports.create_release = exports.create_package = exports.sync_all_repos = exports.remove_repo = exports.add_repos = exports.sync_packages_one_repo = exports.get_available_packages = exports.download_release = void 0;
+exports.upload_release_file = exports.create_release = exports.create_package = exports.update_all_if_needed = exports.sync_all_repos = exports.remove_repo = exports.add_repos = exports.sync_packages_one_repo = exports.get_available_packages = exports.download_locator = exports.download_release = void 0;
 const util = __importStar(require("./util"));
 const fs = __importStar(require("fs"));
 const packages = __importStar(require("./package"));
@@ -40,6 +40,11 @@ function download_release(release, mods_folder, known_packages) {
     }
 }
 exports.download_release = download_release;
+function download_locator(locator, mods_folder, known_packages) {
+    let rel = packages.locator_to_release(locator, known_packages);
+    download_release(rel, mods_folder, known_packages);
+}
+exports.download_locator = download_locator;
 function get_available_packages(repo, as_json) {
     let resp = util.get_sync(repo + "/v1/get_available_packages");
     if (resp == undefined) {
@@ -113,6 +118,30 @@ function sync_all_repos() {
     util.print_note("Done!");
 }
 exports.sync_all_repos = sync_all_repos;
+function update_all_if_needed(installed, known_packages, fold, game_version) {
+    // we sync repos before calling this function, so we have all up to date packages
+    let to_update = [];
+    for (const locator of installed.locators) {
+        let rel = packages.locator_to_release(locator, known_packages);
+        let ppkg = packages.locator_to_package(locator, known_packages);
+        // get latest release
+        let nrel = packages.get_desired_release(ppkg, game_version);
+        if (nrel.released > rel.released) {
+            to_update.push(nrel);
+        }
+    }
+    util.print_note(`Updating packages..`);
+    for (const rel of to_update) {
+        let lloc = packages.release_to_locator(rel, known_packages);
+        installed.locators = installed.locators.filter(loc => !(loc.slug == lloc.slug && loc.repo == lloc.repo)); // remove old release
+        let new_locator = new packages.InstalledLocator(lloc.repo, lloc.slug, lloc.rel_id, Date.now());
+        installed.locators.push(new_locator);
+        download_release(rel, fold, known_packages);
+    }
+    fs.writeFileSync(fold + "/installed.json", JSON.stringify(installed));
+    util.print_note(`${to_update.length} packages updated`);
+}
+exports.update_all_if_needed = update_all_if_needed;
 // below is unused/useless
 function create_package(repo, name, description) {
     let form = new FormData();

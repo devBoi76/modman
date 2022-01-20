@@ -62,7 +62,7 @@ async function main(){
 				util.print_note("Packages to install:");
 			}
 			desired_releases.forEach( (value) => {
-				packages.add_as_installed(value, parsed_args.config_folder);
+				packages.add_as_installed(value, parsed_args.config_folder, known_packages);
 				util.print_release(value, known_packages);
 				api.download_release(value, parsed_args.mods_folder, known_packages);
 			});
@@ -197,18 +197,19 @@ async function main(){
 		}
 		case "list": {
 			let known_packages = packages.read_pkg_json(parsed_args.config_folder);
-			// util.print_note(`${known_packages.length} packages available`);
-			// util.print_note("To update your repositories, type `modman sync`\n")
-			// for (const pkg of known_packages) {
-			// 	util.print_package(pkg);
-			// }
-			// break;
 			let installed = packages.read_installed_json(parsed_args.config_folder)
 			util.print_note("Installed Mods:")
-			for(const rel of installed.releases) {
+			for(const loc of installed.locators) {
+				let rel = packages.locator_to_release(loc, known_packages)
 				util.print_release(rel, known_packages);
 			}
 			break;
+		}
+		case "update": {
+			let known_packages = packages.read_pkg_json(parsed_args.config_folder);
+			let installed = packages.read_installed_json(parsed_args.config_folder);
+			api.sync_all_repos()
+			api.update_all_if_needed(installed, known_packages, parsed_args.config_folder, parsed_args.version)
 		}
 	}
 	

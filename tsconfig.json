@@ -16,7 +16,8 @@
     "src/configuration.ts",
     "src/api.ts",
     "src/modrinth_api.ts",
-    "src/context.ts"
+    "src/context.ts",
+    "src/filedef.ts"
   ],
   "lib": ["es2015"]
 }

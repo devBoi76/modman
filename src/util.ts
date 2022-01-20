@@ -2,7 +2,7 @@ let prmpt = require("prompt-sync")({ sigint: true });
 import * as packages from "./package"
 import * as xmlhpr from "xmlhttprequest"
 
-export const possible_options = ["install", "sync", "search", "list", "help", "add_repo", "remove_repo", "create_package", "create_release", "upload_release"];
+export const possible_options = ["install", "sync", "update", "search", "list", "help", "add_repo", "remove_repo", "create_package", "create_release", "upload_release"];
 export const possible_args = {
 	VERSION: "--version",
 	INSTALL_METHOD: "--method" // packageBehavior

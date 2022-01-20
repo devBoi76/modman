@@ -24,6 +24,7 @@ const fs = __importStar(require("fs"));
 const util = __importStar(require("./util"));
 const api = __importStar(require("./api"));
 const context = __importStar(require("./context"));
+const filedef = __importStar(require("./filedef"));
 function parse_args(options) {
     let parsed_args = {
         operation: "install",
@@ -71,11 +72,7 @@ function parse_args(options) {
 exports.parse_args = parse_args;
 function create_template_file(fold) {
     // const writer = fs.createWriteStream("./.modman/conf.json", {flags: "w"});
-    const default_json = {
-        game_version: "1.16",
-        repos: [],
-        search_modrinth: false
-    };
+    const default_json = new filedef.config();
     fs.writeFileSync(fold + "/conf.json", JSON.stringify(default_json));
 }
 ;
@@ -86,9 +83,7 @@ function create_template_idx_file(fold) {
 }
 ;
 function create_template_installed_file(fold) {
-    const file = {
-        releases: []
-    };
+    const file = new filedef.installed();
     fs.writeFileSync(fold + "/installed.json", JSON.stringify(file));
 }
 function ensure_file() {

@@ -2,6 +2,7 @@ import * as util from "./util"
 import * as fs from "fs"
 import * as packages from "./package"
 import * as configuration from "./configuration"
+import * as filedef from "./filedef"
 
 var FormData = require('form-data');
 
@@ -18,6 +19,11 @@ export function download_release(release: packages.Release, mods_folder: string,
             response.pipe(file);
         });
     }
+}
+
+export function download_locator(locator: packages.Locator, mods_folder: string, known_packages: Array<packages.Package>) {
+    let rel = packages.locator_to_release(locator, known_packages);
+    download_release(rel, mods_folder, known_packages);
 }
 
 export function get_available_packages(repo: string, as_json?: boolean) {
@@ -92,6 +98,33 @@ export function sync_all_repos() {
     let unified = packages.unify_indexes(indexes_to_sync);
     fs.writeFileSync("./.modman/pkg_idx.json", JSON.stringify(unified));
     util.print_note("Done!")
+}
+
+export function update_all_if_needed(installed: filedef.installed, known_packages: Array<packages.Package>, fold: string, game_version: string) {
+    // we sync repos before calling this function, so we have all up to date packages
+
+    let to_update: Array<packages.Release> = []
+
+    for (const locator of installed.locators) {
+        let rel = packages.locator_to_release(locator, known_packages);
+        let ppkg = packages.locator_to_package(locator, known_packages)
+        // get latest release
+        let nrel = packages.get_desired_release(ppkg, game_version);
+        if (nrel.released > rel.released) {
+            to_update.push(nrel)
+        }
+    }
+
+    util.print_note(`Updating packages..`)
+    for (const rel of to_update) {
+        let lloc = packages.release_to_locator(rel, known_packages)
+        installed.locators = installed.locators.filter( loc => !(loc.slug == lloc.slug && loc.repo == lloc.repo) ); // remove old release
+        let new_locator = new packages.InstalledLocator(lloc.repo, lloc.slug, lloc.rel_id, Date.now())
+        installed.locators.push(new_locator)
+        download_release(rel, fold, known_packages);
+    }
+    fs.writeFileSync(fold+"/installed.json", JSON.stringify(installed))
+    util.print_note(`${to_update.length} packages updated`)
 }
 
 

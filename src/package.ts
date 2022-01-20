@@ -2,6 +2,7 @@
 import * as fs from "fs"
 import * as configuration from "./configuration"
 import * as util from "./util"
+import * as filedef from "./filedef"
 var prompt = require('prompt-sync')();
 
 export class Release {
@@ -11,6 +12,7 @@ export class Release {
     deps: Array<Dependency>;
     parent_package_id: number;
     released: number; // utc timestamp
+    updated?: number;
     is_dependency: boolean;
     downloads: number;
     direct_link: string;
@@ -53,6 +55,72 @@ export class Repository {
     }
 }
 
+export class Locator {
+    // The locator is a unique locator to a specific package version
+    // It contains the full URL of the repository, so that it can be resolved even if someone hasn't added that repository
+    repo: string;
+    slug: string;
+    rel_id: number;
+
+    constructor(repo: string, slug: string, rel_id: number) {
+        this.repo = repo
+        this.slug = slug
+        this.rel_id = rel_id
+    }
+
+    get short_slug() {
+        return `${this.repo}/${this.slug}/${this.rel_id}`
+    }
+}
+
+export class InstalledLocator extends Locator {
+    updated: number; // unix timestamp ms format
+    constructor(repo: string, slug: string, rel_id: number, updated: number) {
+        super(repo, slug, rel_id)
+        this.updated = updated
+    }
+}
+
+export function locator_to_release(locator: Locator, known_packages: Array<Package>): Release {
+    known_packages = known_packages.filter( (pkg) => {return pkg.repository == locator.repo})
+    if (known_packages.length == 0) {
+        util.print_error(`Repository ${locator.repo} not found`);
+        process.exit();
+    }
+    known_packages = known_packages.filter( (pkg) => {return pkg.slug == locator.slug})
+    if (known_packages.length == 0) {
+        util.print_error(`Package ${locator.repo}/${locator.slug} not found`);
+        process.exit();
+    }
+    let rel: Release = undefined 
+    try {
+        rel = known_packages[0].releases[locator.rel_id]
+    } catch (err) {
+        util.print_error(`Release ${locator.short_slug} not found`)
+        process.exit();
+    }
+    return rel
+}
+
+export function locator_to_package(locator: Locator, known_packages: Array<Package>): Package {
+    known_packages = known_packages.filter( (pkg) => {return pkg.repository == locator.repo})
+    if (known_packages.length == 0) {
+        util.print_error(`Repository ${locator.repo} not found`);
+        process.exit();
+    }
+    known_packages = known_packages.filter( (pkg) => {return pkg.slug == locator.slug})
+    if (known_packages.length == 0) {
+        util.print_error(`Package ${locator.repo}/${locator.slug} not found`);
+        process.exit();
+    }
+    return known_packages[0]
+}
+
+export function release_to_locator(release: Release, known_packages: Array<Package>): Locator {
+    let ppkg = id_to_object(release.parent_package_id, known_packages)
+    return new Locator(ppkg.repository, ppkg.slug, release.id)
+}
+
 // When we parse the package JSON to an object, the object doesn't have any function as JSON doesn't store them, so we have to do this
 export function get_total_downloads(pkg: Package) {
     let all = 0;
@@ -84,21 +152,22 @@ export function read_pkg_json(conf_fold: string): Array<Package> {
     return json;
 }
 
-export function read_installed_json(fold: string) {
-    let json = undefined;
+export function read_installed_json(fold: string): filedef.installed {
+    let json: filedef.installed = undefined
     try {
         let file = fs.readFileSync(fold+"/installed.json", "utf8")
         json = JSON.parse(file)
     } catch (err) {
-        json = {releases: []}
+        json = new filedef.installed()
     }
     return json
 }
 
 export function names_to_objects(package_names: Array<string>, known_packages: any, exit: boolean): Set<Package> {
+    // also filters for slugs
     let objects = new Set<Package>();
     for(const name of package_names) {
-        let pkgs = known_packages.filter(pkg => pkg.name.toLowerCase() == name.toLowerCase());
+        let pkgs = known_packages.filter(pkg => pkg.name.toLowerCase() == name.toLowerCase() || pkg.slug == name.toLowerCase());
             if(pkgs.length > 1) {
                 util.print_note(`${pkgs.length} packages with the name ${name} found`);
                 for (let i = 0; i < pkgs.length; i++) {
@@ -187,13 +256,19 @@ export function unify_indexes(indexes: Array<Array<Package>>) {
             id_counter += 1;
         }
     }
-
     return unified_index;
-
 }
 
-export function add_as_installed(release: Release, fold: string) {
-    let file = JSON.parse(fs.readFileSync(fold+"/installed.json", "utf8"))
-    file.releases.push(release)
+export function add_as_installed(release: Release, fold: string, known_packages: Array<Package>) {
+    let file = read_installed_json(fold)
+
+    let locator = release_to_locator(release, known_packages)
+    if (!(file.locators.map(loc => loc.short_slug).includes(locator.short_slug))) {
+        let installed_locator = new InstalledLocator(locator.repo, locator.slug, locator.rel_id, Date.now())
+        file.locators.push(installed_locator);
+    } else {
+        let idx = file.locators.findIndex( loc => loc.short_slug == locator.short_slug)
+        file.locators[idx].updated = Date.now() // update last checked
+    }
     fs.writeFileSync(fold+"/installed.json", JSON.stringify(file))
 }

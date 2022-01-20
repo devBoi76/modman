@@ -19,10 +19,11 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.add_as_installed = exports.unify_indexes = exports.release_compatible = exports.get_desired_release = exports.repo_id_to_object = exports.id_to_object = exports.names_to_objects = exports.read_installed_json = exports.read_pkg_json = exports.get_total_downloads = exports.Repository = exports.Package = exports.Dependency = exports.Release = void 0;
+exports.add_as_installed = exports.unify_indexes = exports.release_compatible = exports.get_desired_release = exports.repo_id_to_object = exports.id_to_object = exports.names_to_objects = exports.read_installed_json = exports.read_pkg_json = exports.get_total_downloads = exports.release_to_locator = exports.locator_to_package = exports.locator_to_release = exports.InstalledLocator = exports.Locator = exports.Repository = exports.Package = exports.Dependency = exports.Release = void 0;
 const fs = __importStar(require("fs"));
 const configuration = __importStar(require("./configuration"));
 const util = __importStar(require("./util"));
+const filedef = __importStar(require("./filedef"));
 var prompt = require('prompt-sync')();
 class Release {
 }
@@ -48,6 +49,65 @@ class Repository {
     }
 }
 exports.Repository = Repository;
+class Locator {
+    constructor(repo, slug, rel_id) {
+        this.repo = repo;
+        this.slug = slug;
+        this.rel_id = rel_id;
+    }
+    get short_slug() {
+        return `${this.repo}/${this.slug}/${this.rel_id}`;
+    }
+}
+exports.Locator = Locator;
+class InstalledLocator extends Locator {
+    constructor(repo, slug, rel_id, updated) {
+        super(repo, slug, rel_id);
+        this.updated = updated;
+    }
+}
+exports.InstalledLocator = InstalledLocator;
+function locator_to_release(locator, known_packages) {
+    known_packages = known_packages.filter((pkg) => { return pkg.repository == locator.repo; });
+    if (known_packages.length == 0) {
+        util.print_error(`Repository ${locator.repo} not found`);
+        process.exit();
+    }
+    known_packages = known_packages.filter((pkg) => { return pkg.slug == locator.slug; });
+    if (known_packages.length == 0) {
+        util.print_error(`Package ${locator.repo}/${locator.slug} not found`);
+        process.exit();
+    }
+    let rel = undefined;
+    try {
+        rel = known_packages[0].releases[locator.rel_id];
+    }
+    catch (err) {
+        util.print_error(`Release ${locator.short_slug} not found`);
+        process.exit();
+    }
+    return rel;
+}
+exports.locator_to_release = locator_to_release;
+function locator_to_package(locator, known_packages) {
+    known_packages = known_packages.filter((pkg) => { return pkg.repository == locator.repo; });
+    if (known_packages.length == 0) {
+        util.print_error(`Repository ${locator.repo} not found`);
+        process.exit();
+    }
+    known_packages = known_packages.filter((pkg) => { return pkg.slug == locator.slug; });
+    if (known_packages.length == 0) {
+        util.print_error(`Package ${locator.repo}/${locator.slug} not found`);
+        process.exit();
+    }
+    return known_packages[0];
+}
+exports.locator_to_package = locator_to_package;
+function release_to_locator(release, known_packages) {
+    let ppkg = id_to_object(release.parent_package_id, known_packages);
+    return new Locator(ppkg.repository, ppkg.slug, release.id);
+}
+exports.release_to_locator = release_to_locator;
 // When we parse the package JSON to an object, the object doesn't have any function as JSON doesn't store them, so we have to do this
 function get_total_downloads(pkg) {
     let all = 0;
@@ -86,15 +146,16 @@ function read_installed_json(fold) {
         json = JSON.parse(file);
     }
     catch (err) {
-        json = { releases: [] };
+        json = new filedef.installed();
     }
     return json;
 }
 exports.read_installed_json = read_installed_json;
 function names_to_objects(package_names, known_packages, exit) {
+    // also filters for slugs
     let objects = new Set();
     for (const name of package_names) {
-        let pkgs = known_packages.filter(pkg => pkg.name.toLowerCase() == name.toLowerCase());
+        let pkgs = known_packages.filter(pkg => pkg.name.toLowerCase() == name.toLowerCase() || pkg.slug == name.toLowerCase());
         if (pkgs.length > 1) {
             util.print_note(`${pkgs.length} packages with the name ${name} found`);
             for (let i = 0; i < pkgs.length; i++) {
@@ -185,9 +246,17 @@ function unify_indexes(indexes) {
     return unified_index;
 }
 exports.unify_indexes = unify_indexes;
-function add_as_installed(release, fold) {
-    let file = JSON.parse(fs.readFileSync(fold + "/installed.json", "utf8"));
-    file.releases.push(release);
+function add_as_installed(release, fold, known_packages) {
+    let file = read_installed_json(fold);
+    let locator = release_to_locator(release, known_packages);
+    if (!(file.locators.map(loc => loc.short_slug).includes(locator.short_slug))) {
+        let installed_locator = new InstalledLocator(locator.repo, locator.slug, locator.rel_id, Date.now());
+        file.locators.push(installed_locator);
+    }
+    else {
+        let idx = file.locators.findIndex(loc => loc.short_slug == locator.short_slug);
+        file.locators[idx].updated = Date.now(); // update last checked
+    }
     fs.writeFileSync(fold + "/installed.json", JSON.stringify(file));
 }
 exports.add_as_installed = add_as_installed;

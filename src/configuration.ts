@@ -2,7 +2,7 @@ import * as fs from "fs"
 import * as util from "./util"
 import * as api from "./api"
 import * as context from "./context"
-
+import * as filedef from "./filedef"
 
 export function parse_args(options: Array<string>) {
     let parsed_args = {
@@ -53,11 +53,7 @@ export function parse_args(options: Array<string>) {
 
 function create_template_file(fold: string) {
 	// const writer = fs.createWriteStream("./.modman/conf.json", {flags: "w"});
-	const default_json = {
-		game_version: "1.16",
-		repos: [],
-		search_modrinth: false
-	};
+	const default_json = new filedef.config()
 	fs.writeFileSync(fold+"/conf.json", JSON.stringify(default_json));
 };
 
@@ -68,9 +64,7 @@ function create_template_idx_file(fold: string) {
 };
 
 function create_template_installed_file(fold: string) {
-	const file = {
-		releases: []
-	}
+	const file = new filedef.installed()
 	fs.writeFileSync(fold+"/installed.json", JSON.stringify(file))
 }
 
