@@ -84,6 +84,17 @@ export function read_pkg_json(conf_fold: string): Array<Package> {
     return json;
 }
 
+export function read_installed_json(fold: string) {
+    let json = undefined;
+    try {
+        let file = fs.readFileSync(fold+"/installed.json", "utf8")
+        json = JSON.parse(file)
+    } catch (err) {
+        json = {releases: []}
+    }
+    return json
+}
+
 export function names_to_objects(package_names: Array<string>, known_packages: any, exit: boolean): Set<Package> {
     let objects = new Set<Package>();
     for(const name of package_names) {

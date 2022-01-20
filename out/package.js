@@ -19,7 +19,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.add_as_installed = exports.unify_indexes = exports.release_compatible = exports.get_desired_release = exports.repo_id_to_object = exports.id_to_object = exports.names_to_objects = exports.read_pkg_json = exports.get_total_downloads = exports.Repository = exports.Package = exports.Dependency = exports.Release = void 0;
+exports.add_as_installed = exports.unify_indexes = exports.release_compatible = exports.get_desired_release = exports.repo_id_to_object = exports.id_to_object = exports.names_to_objects = exports.read_installed_json = exports.read_pkg_json = exports.get_total_downloads = exports.Repository = exports.Package = exports.Dependency = exports.Release = void 0;
 const fs = __importStar(require("fs"));
 const configuration = __importStar(require("./configuration"));
 const util = __importStar(require("./util"));
@@ -79,6 +79,18 @@ function read_pkg_json(conf_fold) {
     return json;
 }
 exports.read_pkg_json = read_pkg_json;
+function read_installed_json(fold) {
+    let json = undefined;
+    try {
+        let file = fs.readFileSync(fold + "/installed.json", "utf8");
+        json = JSON.parse(file);
+    }
+    catch (err) {
+        json = { releases: [] };
+    }
+    return json;
+}
+exports.read_installed_json = read_installed_json;
 function names_to_objects(package_names, known_packages, exit) {
     let objects = new Set();
     for (const name of package_names) {

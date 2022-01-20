@@ -207,10 +207,16 @@ function main() {
             }
             case "list": {
                 let known_packages = packages.read_pkg_json(parsed_args.config_folder);
-                util.print_note(`${known_packages.length} packages available`);
-                util.print_note("To update your repositories, type `modman sync`\n");
-                for (const pkg of known_packages) {
-                    util.print_package(pkg);
+                // util.print_note(`${known_packages.length} packages available`);
+                // util.print_note("To update your repositories, type `modman sync`\n")
+                // for (const pkg of known_packages) {
+                // 	util.print_package(pkg);
+                // }
+                // break;
+                let installed = packages.read_installed_json(parsed_args.config_folder);
+                util.print_note("Installed Mods:");
+                for (const rel of installed.releases) {
+                    util.print_release(rel, known_packages);
                 }
                 break;
             }

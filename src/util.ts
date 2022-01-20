@@ -58,7 +58,7 @@ export function print_debug(text: string) {
 export function print_release(release: packages.Release, known_packages: Array<packages.Package>): void {
     let a = packages.id_to_object(release.parent_package_id, known_packages);
 	if(release.is_dependency){
-		console.log(`[Dependency]: ${a.name} version ${release.version} for Minecraft ${release.game_version}`)
+		console.log(`${colors.BgGreen}${colors.FgBlack}[Dependency]${colors.Reset} ${a.name} version ${release.version} for Minecraft ${release.game_version}`)
 		return;
 	}
 	console.log(`${colors.BgGreen}${colors.FgBlack}[Release]${colors.Reset} ${a.name} version ${release.version} for minecraft ${release.game_version}`)
