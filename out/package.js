@@ -19,7 +19,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.unify_indexes = exports.release_compatible = exports.get_desired_release = exports.repo_id_to_object = exports.id_to_object = exports.names_to_objects = exports.read_pkg_json = exports.get_total_downloads = exports.Repository = exports.Package = exports.Dependency = exports.Release = void 0;
+exports.add_as_installed = exports.unify_indexes = exports.release_compatible = exports.get_desired_release = exports.repo_id_to_object = exports.id_to_object = exports.names_to_objects = exports.read_pkg_json = exports.get_total_downloads = exports.Repository = exports.Package = exports.Dependency = exports.Release = void 0;
 const fs = __importStar(require("fs"));
 const configuration = __importStar(require("./configuration"));
 const util = __importStar(require("./util"));
@@ -173,4 +173,10 @@ function unify_indexes(indexes) {
     return unified_index;
 }
 exports.unify_indexes = unify_indexes;
+function add_as_installed(release, fold) {
+    let file = JSON.parse(fs.readFileSync(fold + "/installed.json", "utf8"));
+    file.releases.push(release);
+    fs.writeFileSync(fold + "/installed.json", JSON.stringify(file));
+}
+exports.add_as_installed = add_as_installed;
 //# sourceMappingURL=package.js.map

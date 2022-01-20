@@ -85,6 +85,12 @@ function create_template_idx_file(fold) {
     fs.writeFileSync(fold + "/pkg_idx.json", api.get_available_packages("http://localhost:5000"));
 }
 ;
+function create_template_installed_file(fold) {
+    const file = {
+        releases: []
+    };
+    fs.writeFileSync(fold + "/installed.json", JSON.stringify(file));
+}
 function ensure_file() {
     try {
         let fold = "";
@@ -102,15 +108,19 @@ function ensure_file() {
             fs.accessSync(fold + "/conf.json");
         }
         catch (err) {
-            // console.error(err);
             create_template_file(fold);
         }
         try {
             fs.accessSync(fold + "/pkg_idx.json");
         }
         catch (err) {
-            // console.error(err);
             create_template_idx_file(fold);
+        }
+        try {
+            fs.accessSync(fold + "/installed.json");
+        }
+        catch (err) {
+            create_template_installed_file(fold);
         }
     }
     catch (err) {

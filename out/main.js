@@ -87,6 +87,7 @@ function main() {
                     util.print_note("Packages to install:");
                 }
                 desired_releases.forEach((value) => {
+                    packages.add_as_installed(value, parsed_args.config_folder);
                     util.print_release(value, known_packages);
                     api.download_release(value, parsed_args.mods_folder, known_packages);
                 });

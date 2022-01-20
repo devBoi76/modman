@@ -31,6 +31,7 @@ export class Package {
     repository: string;
     repository_id: number;
     authors: Array<string>;
+    slug: string;
     
     constructor(id: number, name: string, description: string, releases: Array<Release>, repository: string, repository_id: number) {
         this.id = id;
@@ -155,7 +156,6 @@ export function get_desired_release(pkg: Package, game_version: string, release_
     return newest[0]
 }
 
-
 export function release_compatible(release1: string, release2: string) {
     let arr1 = release1.split(".");
     let arr2 = release2.split(".");
@@ -179,4 +179,10 @@ export function unify_indexes(indexes: Array<Array<Package>>) {
 
     return unified_index;
 
+}
+
+export function add_as_installed(release: Release, fold: string) {
+    let file = JSON.parse(fs.readFileSync(fold+"/installed.json", "utf8"))
+    file.releases.push(release)
+    fs.writeFileSync(fold+"/installed.json", JSON.stringify(file))
 }

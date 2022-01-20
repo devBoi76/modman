@@ -67,6 +67,14 @@ function create_template_idx_file(fold: string) {
 	fs.writeFileSync(fold+"/pkg_idx.json", api.get_available_packages("http://localhost:5000"))
 };
 
+function create_template_installed_file(fold: string) {
+	const file = {
+		releases: []
+	}
+	fs.writeFileSync(fold+"/installed.json", JSON.stringify(file))
+}
+
+
 export function ensure_file() { // do stuff if detectsa mods folder
 	try {
 		let fold = ""
@@ -82,17 +90,19 @@ export function ensure_file() { // do stuff if detectsa mods folder
 		try {
 			fs.accessSync(fold+"/conf.json");
 		} catch (err) {
-			// console.error(err);
 			create_template_file(fold);
 		}
-
 		try {
 			fs.accessSync(fold+"/pkg_idx.json");
 		} catch (err) {
-			// console.error(err);
 			create_template_idx_file(fold);
 		}
-	} catch(err) {
+		try {
+			fs.accessSync(fold+"/installed.json")
+		} catch (err) {
+			create_template_installed_file(fold);
+		}
+	} catch (err) {
 		console.error(err);
 	}
 };

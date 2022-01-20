@@ -59,9 +59,7 @@ export function add_repos(repos: Array<string>) {
     }
     config.repos = config.repos.concat(repo_objs);
     fs.writeFileSync("./.modman/conf.json", JSON.stringify(config));
-    for(const repo of repos) {
-        sync_packages_one_repo(repo);
-    }
+    sync_all_repos()
 }
 
 export function remove_repo(repo: string) {
@@ -95,6 +93,9 @@ export function sync_all_repos() {
     fs.writeFileSync("./.modman/pkg_idx.json", JSON.stringify(unified));
     util.print_note("Done!")
 }
+
+
+// below is unused/useless
 
 export function create_package(repo: string, name: string, description: string) {
     let form = new FormData();
