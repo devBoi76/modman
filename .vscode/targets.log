@@ -1,4 +1,6 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+make: *** No rule to make target 'all'.  Stop.
+ 
 # GNU Make 4.3
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2020 Free Software Foundation, Inc.
@@ -6,7 +8,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Thu Jan 20 12:32:35 2022
+# Make data base, printed on Sun Jan 23 22:54:37 2022
 
 # Variables
 
@@ -17,7 +19,7 @@ LC_ALL = C
 # environment
 GTK_RC_FILES = /etc/gtk/gtkrc:/home/jan/.gtkrc:/home/jan/.config/gtkrc
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-95aa2578-83db-479b-a90b-feb845332636.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-c706c3f0-2fc1-4a94-ac97-0b96890cf4fb.sock
 # environment
 MANDATORY_PATH = /usr/share/gconf/plasma.mandatory.path
 # environment
@@ -75,7 +77,7 @@ APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
 # environment
 MFLAGS = -pqrR
 # environment
-SSH_AUTH_SOCK = /tmp/ssh-NVeRGpnnQT99/agent.1154
+SSH_AUTH_SOCK = /tmp/ssh-jXa8dQy2abgU/agent.1126
 # default
 .SHELLFLAGS := -c
 # environment
@@ -95,13 +97,13 @@ MAKEFILE_LIST := Makefile
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_PID = 7325
+VSCODE_PID = 9451
 # environment
 XDG_SESSION_TYPE = x11
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # environment
-SESSION_MANAGER = local/komp:@/tmp/.ICE-unix/1376,unix/komp:/tmp/.ICE-unix/1376
+SESSION_MANAGER = local/komp:@/tmp/.ICE-unix/1350,unix/komp:/tmp/.ICE-unix/1350
 # automatic
 *F = $(notdir $*)
 # environment
@@ -185,11 +187,12 @@ MAKE_VERSION := 4.3
 # environment
 LC_MEASUREMENT = pl_PL.UTF-8
 # environment
-SSH_AGENT_PID = 1238
+SSH_AGENT_PID = 1210
 # environment
 _ = /usr/share/codium/codium
 # environment
 LC_PAPER = pl_PL.UTF-8
+ 
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -239,17 +242,23 @@ LC_IDENTIFICATION = pl_PL.UTF-8
 
 # Directories
 
-# src (device 66307, inode 11813229): 9 files, no impossibilities.
-# . (device 66307, inode 11812953): 18 files, no impossibilities.
-# out (device 66307, inode 11813110): 21 files, no impossibilities.
+# src (device 66307, inode 11813229): 10 files, no impossibilities.
+# . (device 66307, inode 11812953): 22 files, no impossibilities.
+# out (device 66307, inode 11813110): 23 files, no impossibilities.
 
-# 48 files, no impossibilities in 3 directories.
+# 55 files, no impossibilities in 3 directories.
 
 # Implicit Rules
 
 # No implicit rules.
 
 # Files
+
+# Not a target:
+out/filedef.js.map:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 # Not a target:
 out/api_direct.js:
@@ -290,9 +299,6 @@ out/api.js.map:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
- 
-make: *** No rule to make target 'all'.  Stop.
- 
 #  Last modified 2022-01-19 15:20:34.428449508
 #  File has been updated.
 #  Successfully updated.
@@ -315,12 +321,18 @@ out/modrinth_api.js.map:
 #  Modification time never checked.
 #  File has not been updated.
 
-clean: out/api.js out/api.js.map out/api_direct.js out/api_direct.js.map out/configuration.js out/configuration.js.map out/context.js out/context.js.map out/download.js out/download.js.map out/main.js out/main.js.map out/modrinth_api.js out/modrinth_api.js.map out/package.js out/package.js.map out/program.js.map out/util.js out/util.js.map
+clean: out/api.js out/api.js.map out/api_direct.js out/api_direct.js.map out/configuration.js out/configuration.js.map out/context.js out/context.js.map out/download.js out/download.js.map out/filedef.js out/filedef.js.map out/main.js out/main.js.map out/modrinth_api.js out/modrinth_api.js.map out/package.js out/package.js.map out/program.js.map out/util.js out/util.js.map
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 8):
 	rm out/*
+
+# Not a target:
+src/filedef.ts:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 # Not a target:
 out/util.js:
@@ -383,6 +395,7 @@ all:
 #  File does not exist.
 #  File has not been updated.
 
+ 
 # Not a target:
 src/configuration.ts:
 #  Implicit rule search has not been done.
@@ -395,12 +408,18 @@ out/context.js:
 #  Modification time never checked.
 #  File has not been updated.
 
-build: src/api.ts src/configuration.ts src/context.ts src/main.ts src/modrinth_api.ts src/package.ts src/util.ts
+build: src/api.ts src/configuration.ts src/context.ts src/filedef.ts src/main.ts src/modrinth_api.ts src/package.ts src/util.ts
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 2):
 	tsc -p tsconfig.json
+
+# Not a target:
+out/filedef.js:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 # Not a target:
 src/package.ts:
@@ -452,19 +471,19 @@ out/download.js.map:
 #  File has not been updated.
 
 # files hash-table stats:
-# Load=33/1024=3%, Rehash=0, Collisions=2/70=3%
+# Load=36/1024=4%, Rehash=0, Collisions=2/76=3%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 78 / storage = 1057 B / avg = 13 B
-# current buf: size = 8162 B / used = 1057 B / count = 78 / avg = 13 B
+# strcache buffers: 1 (0) / strings = 88 / storage = 1260 B / avg = 14 B
+# current buf: size = 8162 B / used = 1260 B / count = 88 / avg = 14 B
 
-# strcache performance: lookups = 92 / hit rate = 15%
+# strcache performance: lookups = 102 / hit rate = 13%
 # hash-table stats:
-# Load=78/8192=1%, Rehash=0, Collisions=0/92=0%
-# Finished Make data base on Thu Jan 20 12:32:35 2022
+# Load=88/8192=1%, Rehash=0, Collisions=0/102=0%
+# Finished Make data base on Sun Jan 23 22:54:37 2022
 
  
