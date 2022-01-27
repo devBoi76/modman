@@ -259,6 +259,14 @@ export function unify_indexes(indexes: Array<Array<Package>>) {
     return unified_index;
 }
 
+export function check_if_installed(release: Release, fold: string, known_packages: Array<Package>): boolean {
+    let installed = read_installed_json(fold)
+    let ppkg = id_to_object(release.parent_package_id, known_packages)
+    let a = installed.locators.filter( loc => loc.slug == ppkg.slug )
+
+    return a.length > 0
+}
+
 export function add_as_installed(release: Release, fold: string, known_packages: Array<Package>) {
     let file = read_installed_json(fold)
 

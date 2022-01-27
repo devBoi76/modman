@@ -19,7 +19,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.add_as_installed = exports.unify_indexes = exports.release_compatible = exports.get_desired_release = exports.repo_id_to_object = exports.id_to_object = exports.names_to_objects = exports.read_installed_json = exports.read_pkg_json = exports.get_total_downloads = exports.release_to_locator = exports.locator_to_package = exports.locator_to_release = exports.InstalledLocator = exports.Locator = exports.Repository = exports.Package = exports.Dependency = exports.Release = void 0;
+exports.add_as_installed = exports.check_if_installed = exports.unify_indexes = exports.release_compatible = exports.get_desired_release = exports.repo_id_to_object = exports.id_to_object = exports.names_to_objects = exports.read_installed_json = exports.read_pkg_json = exports.get_total_downloads = exports.release_to_locator = exports.locator_to_package = exports.locator_to_release = exports.InstalledLocator = exports.Locator = exports.Repository = exports.Package = exports.Dependency = exports.Release = void 0;
 const fs = __importStar(require("fs"));
 const configuration = __importStar(require("./configuration"));
 const util = __importStar(require("./util"));
@@ -246,6 +246,13 @@ function unify_indexes(indexes) {
     return unified_index;
 }
 exports.unify_indexes = unify_indexes;
+function check_if_installed(release, fold, known_packages) {
+    let installed = read_installed_json(fold);
+    let ppkg = id_to_object(release.parent_package_id, known_packages);
+    let a = installed.locators.filter(loc => loc.slug == ppkg.slug);
+    return a.length > 0;
+}
+exports.check_if_installed = check_if_installed;
 function add_as_installed(release, fold, known_packages) {
     let file = read_installed_json(fold);
     let locator = release_to_locator(release, known_packages);

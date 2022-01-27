@@ -86,10 +86,17 @@ function main() {
                 if (desired_releases.size > 0) {
                     util.print_note("Packages to install:");
                 }
-                desired_releases.forEach((value) => {
-                    packages.add_as_installed(value, parsed_args.config_folder, known_packages);
-                    util.print_release(value, known_packages);
-                    api.download_release(value, parsed_args.mods_folder, known_packages);
+                desired_releases.forEach((release) => {
+                    let is_installed = packages.check_if_installed(release, parsed_args.config_folder, known_packages);
+                    if (is_installed) {
+                        let ppkg = packages.id_to_object(release.parent_package_id, known_packages);
+                        util.print_note(`${ppkg.name} is already installed, skipping`);
+                    }
+                    else {
+                        packages.add_as_installed(release, parsed_args.config_folder, known_packages);
+                        util.print_release(release, known_packages);
+                        api.download_release(release, parsed_args.mods_folder, known_packages);
+                    }
                 });
                 // BEGIN MODRINTH
                 if (config.search_modrinth && desired_pkg_objects.size != parsed_args.words.length) {
