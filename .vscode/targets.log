@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sun Jan 23 22:54:37 2022
+# Make data base, printed on Thu Jan 27 17:57:31 2022
 
 # Variables
 
@@ -19,7 +19,7 @@ LC_ALL = C
 # environment
 GTK_RC_FILES = /etc/gtk/gtkrc:/home/jan/.gtkrc:/home/jan/.config/gtkrc
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-c706c3f0-2fc1-4a94-ac97-0b96890cf4fb.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-11ec8476-7785-4f76-9b78-6065f0213826.sock
 # environment
 MANDATORY_PATH = /usr/share/gconf/plasma.mandatory.path
 # environment
@@ -77,7 +77,7 @@ APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
 # environment
 MFLAGS = -pqrR
 # environment
-SSH_AUTH_SOCK = /tmp/ssh-jXa8dQy2abgU/agent.1126
+SSH_AUTH_SOCK = /tmp/ssh-msvT4AAxzhCd/agent.1133
 # default
 .SHELLFLAGS := -c
 # environment
@@ -97,13 +97,13 @@ MAKEFILE_LIST := Makefile
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_PID = 9451
+VSCODE_PID = 37413
 # environment
 XDG_SESSION_TYPE = x11
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # environment
-SESSION_MANAGER = local/komp:@/tmp/.ICE-unix/1350,unix/komp:/tmp/.ICE-unix/1350
+SESSION_MANAGER = local/komp:@/tmp/.ICE-unix/1357,unix/komp:/tmp/.ICE-unix/1357
 # automatic
 *F = $(notdir $*)
 # environment
@@ -187,12 +187,11 @@ MAKE_VERSION := 4.3
 # environment
 LC_MEASUREMENT = pl_PL.UTF-8
 # environment
-SSH_AGENT_PID = 1210
+SSH_AGENT_PID = 1217
 # environment
 _ = /usr/share/codium/codium
 # environment
 LC_PAPER = pl_PL.UTF-8
- 
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -395,7 +394,6 @@ all:
 #  File does not exist.
 #  File has not been updated.
 
- 
 # Not a target:
 src/configuration.ts:
 #  Implicit rule search has not been done.
@@ -438,6 +436,7 @@ src/context.ts:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
+ 
 
 # Not a target:
 src/main.ts:
@@ -484,6 +483,6 @@ out/download.js.map:
 # strcache performance: lookups = 102 / hit rate = 13%
 # hash-table stats:
 # Load=88/8192=1%, Rehash=0, Collisions=0/102=0%
-# Finished Make data base on Sun Jan 23 22:54:37 2022
+# Finished Make data base on Thu Jan 27 17:57:31 2022
 
  
