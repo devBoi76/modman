@@ -77,8 +77,9 @@ function main() {
                 // resolve dependencies
                 for (const rel of desired_releases) {
                     for (const dep of rel.deps) {
-                        let p = packages.id_to_object(dep.pkg_id, known_packages);
-                        let r = p.releases.filter((value) => value.id == dep.release_id)[0];
+                        let deploc = packages.Locator.from_short_slug(dep);
+                        let p = packages.locator_to_package(deploc, known_packages);
+                        let r = p.releases.filter((value) => value.id == deploc.rel_id)[0];
                         r.is_dependency = true;
                         desired_releases.add(r);
                     }
@@ -89,7 +90,7 @@ function main() {
                 desired_releases.forEach((release) => {
                     let is_installed = packages.check_if_installed(release, parsed_args.config_folder, known_packages);
                     if (is_installed) {
-                        let ppkg = packages.id_to_object(release.parent_package_id, known_packages);
+                        let ppkg = packages.locator_to_package(packages.Locator.from_short_slug(release.parent_locator), known_packages);
                         util.print_note(`${ppkg.name} is already installed, skipping`);
                     }
                     else {

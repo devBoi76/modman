@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Thu Jan 27 17:57:31 2022
+# Make data base, printed on Fri Jan 28 13:07:47 2022
 
 # Variables
 
@@ -17,9 +17,11 @@ GDK_BACKEND = x11
 # environment
 LC_ALL = C
 # environment
+NO_AT_BRIDGE = 1
+# environment
 GTK_RC_FILES = /etc/gtk/gtkrc:/home/jan/.gtkrc:/home/jan/.config/gtkrc
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-11ec8476-7785-4f76-9b78-6065f0213826.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-8cfc7963-6405-4501-a40a-3172e2b89418.sock
 # environment
 MANDATORY_PATH = /usr/share/gconf/plasma.mandatory.path
 # environment
@@ -77,7 +79,7 @@ APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
 # environment
 MFLAGS = -pqrR
 # environment
-SSH_AUTH_SOCK = /tmp/ssh-msvT4AAxzhCd/agent.1133
+SSH_AUTH_SOCK = /tmp/ssh-GXFzMZ85ye2H/agent.1166
 # default
 .SHELLFLAGS := -c
 # environment
@@ -97,13 +99,13 @@ MAKEFILE_LIST := Makefile
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_PID = 37413
+VSCODE_PID = 9544
 # environment
 XDG_SESSION_TYPE = x11
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # environment
-SESSION_MANAGER = local/komp:@/tmp/.ICE-unix/1357,unix/komp:/tmp/.ICE-unix/1357
+SESSION_MANAGER = local/komp:@/tmp/.ICE-unix/1390,unix/komp:/tmp/.ICE-unix/1390
 # automatic
 *F = $(notdir $*)
 # environment
@@ -187,7 +189,7 @@ MAKE_VERSION := 4.3
 # environment
 LC_MEASUREMENT = pl_PL.UTF-8
 # environment
-SSH_AGENT_PID = 1217
+SSH_AGENT_PID = 1250
 # environment
 _ = /usr/share/codium/codium
 # environment
@@ -233,7 +235,7 @@ KDE_FULL_SESSION = true
 # environment
 LC_IDENTIFICATION = pl_PL.UTF-8
 # variable set hash-table stats:
-# Load=110/1024=11%, Rehash=0, Collisions=6/140=4%
+# Load=111/1024=11%, Rehash=0, Collisions=6/141=4%
 
 # Pattern-specific Variable Values
 
@@ -241,11 +243,11 @@ LC_IDENTIFICATION = pl_PL.UTF-8
 
 # Directories
 
-# src (device 66307, inode 11813229): 10 files, no impossibilities.
-# . (device 66307, inode 11812953): 22 files, no impossibilities.
+# src (device 66307, inode 11813229): 11 files, no impossibilities.
+# . (device 66307, inode 11812953): 19 files, no impossibilities.
 # out (device 66307, inode 11813110): 23 files, no impossibilities.
 
-# 55 files, no impossibilities in 3 directories.
+# 53 files, no impossibilities in 3 directories.
 
 # Implicit Rules
 
@@ -316,6 +318,7 @@ out/main.js.map:
 
 # Not a target:
 out/modrinth_api.js.map:
+ 
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -326,6 +329,12 @@ clean: out/api.js out/api.js.map out/api_direct.js out/api_direct.js.map out/con
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 8):
 	rm out/*
+
+# Not a target:
+src/game_version.ts:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 # Not a target:
 src/filedef.ts:
@@ -406,7 +415,7 @@ out/context.js:
 #  Modification time never checked.
 #  File has not been updated.
 
-build: src/api.ts src/configuration.ts src/context.ts src/filedef.ts src/main.ts src/modrinth_api.ts src/package.ts src/util.ts
+build: src/api.ts src/configuration.ts src/context.ts src/filedef.ts src/game_version.ts src/main.ts src/modrinth_api.ts src/package.ts src/util.ts
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -436,7 +445,6 @@ src/context.ts:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
- 
 
 # Not a target:
 src/main.ts:
@@ -470,19 +478,19 @@ out/download.js.map:
 #  File has not been updated.
 
 # files hash-table stats:
-# Load=36/1024=4%, Rehash=0, Collisions=2/76=3%
+# Load=37/1024=4%, Rehash=0, Collisions=2/78=3%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 88 / storage = 1260 B / avg = 14 B
-# current buf: size = 8162 B / used = 1260 B / count = 88 / avg = 14 B
+# strcache buffers: 1 (0) / strings = 87 / storage = 1216 B / avg = 13 B
+# current buf: size = 8162 B / used = 1216 B / count = 87 / avg = 13 B
 
-# strcache performance: lookups = 102 / hit rate = 13%
+# strcache performance: lookups = 101 / hit rate = 13%
 # hash-table stats:
-# Load=88/8192=1%, Rehash=0, Collisions=0/102=0%
-# Finished Make data base on Thu Jan 27 17:57:31 2022
+# Load=87/8192=1%, Rehash=0, Collisions=0/101=0%
+# Finished Make data base on Fri Jan 28 13:07:47 2022
 
  

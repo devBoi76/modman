@@ -71,11 +71,11 @@ function print_note(text) {
 }
 exports.print_note = print_note;
 function print_debug(text) {
-    console.log(`${exports.colors.BgYellowBright + exports.colors.FgBlack}[DEBUG]${exports.colors.Reset + exports.colors.Dim} ${text + exports.colors.Reset}`);
+    console.log(`${exports.colors.BgYellowBright + exports.colors.FgBlack}[DEBUG]${exports.colors.Reset + exports.colors.Dim} ${text}${exports.colors.Reset}`);
 }
 exports.print_debug = print_debug;
 function print_release(release, known_packages) {
-    let a = packages.id_to_object(release.parent_package_id, known_packages);
+    let a = packages.locator_to_package(packages.Locator.from_short_slug(release.parent_locator), known_packages);
     if (release.is_dependency) {
         console.log(`${exports.colors.BgGreen}${exports.colors.FgBlack}[Dependency]${exports.colors.Reset} ${a.name} version ${release.version} for Minecraft ${release.game_version}`);
         return;

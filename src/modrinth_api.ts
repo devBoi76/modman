@@ -53,7 +53,7 @@ export class ModirinthPackage extends packages.Package {
     downloads: number;
     
     constructor(id: string, name: string, description: string, versions: Array<Version>, downloads: number) {
-        super(-1, name, description, [], "modrinth", -1);
+        super(name, description, [], "https://modrinth.com");
         this.modirinth_id = id;
         this.versions = versions;
         this.downloads = downloads;

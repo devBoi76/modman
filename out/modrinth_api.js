@@ -49,7 +49,7 @@ class VersionFile {
 exports.VersionFile = VersionFile;
 class ModirinthPackage extends packages.Package {
     constructor(id, name, description, versions, downloads) {
-        super(-1, name, description, [], "modrinth", -1);
+        super(name, description, [], "https://modrinth.com");
         this.modirinth_id = id;
         this.versions = versions;
         this.downloads = downloads;

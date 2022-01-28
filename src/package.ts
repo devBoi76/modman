@@ -9,8 +9,8 @@ export class Release {
     id: number;
     version: string;
     game_version: string;
-    deps: Array<Dependency>;
-    parent_package_id: number;
+    deps: Array<string>; // short slugs of locators
+    parent_locator: string; // short slug with the release id of this release
     released: number; // utc timestamp
     updated?: number;
     is_dependency: boolean;
@@ -19,29 +19,19 @@ export class Release {
     prefer_link: boolean;
 }
 
-export class Dependency {
-    pkg_id: number;
-    release_id: number;
-    repo: string;
-}
-
 export class Package {
-    id: number;
     name: string;
     description: string;
     releases: Array<Release>;
     repository: string;
-    repository_id: number;
     authors: Array<string>;
     slug: string;
     
-    constructor(id: number, name: string, description: string, releases: Array<Release>, repository: string, repository_id: number) {
-        this.id = id;
+    constructor(name: string, description: string, releases: Array<Release>, repository: string) {
         this.name = name;
         this.description = description;
         this.releases = releases;
         this.repository = repository;
-        this.repository_id = repository_id;
     }
 }
 
@@ -68,8 +58,17 @@ export class Locator {
         this.rel_id = rel_id
     }
 
+    static from_short_slug(sslug: string) {
+        let split = sslug.split("->");
+        let rel_id = split.pop();
+        let slug = split.pop();
+        let repo = split.pop();
+        // util.print_debug([sslug, split, rel_id, slug, repo])
+        return new this(repo, slug, Number(rel_id))
+    }
+
     get short_slug() {
-        return `${this.repo}/${this.slug}/${this.rel_id}`
+        return `${this.repo}->${this.slug}->${this.rel_id}`
     }
 }
 
@@ -82,6 +81,7 @@ export class InstalledLocator extends Locator {
 }
 
 export function locator_to_release(locator: Locator, known_packages: Array<Package>): Release {
+    // util.print_debug([locator.repo])
     known_packages = known_packages.filter( (pkg) => {return pkg.repository == locator.repo})
     if (known_packages.length == 0) {
         util.print_error(`Repository ${locator.repo} not found`);
@@ -89,7 +89,7 @@ export function locator_to_release(locator: Locator, known_packages: Array<Packa
     }
     known_packages = known_packages.filter( (pkg) => {return pkg.slug == locator.slug})
     if (known_packages.length == 0) {
-        util.print_error(`Package ${locator.repo}/${locator.slug} not found`);
+        util.print_error(`Package ${locator.repo}->${locator.slug} not found`);
         process.exit();
     }
     let rel: Release = undefined 
@@ -103,6 +103,7 @@ export function locator_to_release(locator: Locator, known_packages: Array<Packa
 }
 
 export function locator_to_package(locator: Locator, known_packages: Array<Package>): Package {
+    // util.print_debug([locator.short_slug, locator.repo])
     known_packages = known_packages.filter( (pkg) => {return pkg.repository == locator.repo})
     if (known_packages.length == 0) {
         util.print_error(`Repository ${locator.repo} not found`);
@@ -110,15 +111,10 @@ export function locator_to_package(locator: Locator, known_packages: Array<Packa
     }
     known_packages = known_packages.filter( (pkg) => {return pkg.slug == locator.slug})
     if (known_packages.length == 0) {
-        util.print_error(`Package ${locator.repo}/${locator.slug} not found`);
+        util.print_error(`Package ${locator.repo}->${locator.slug} not found`);
         process.exit();
     }
     return known_packages[0]
-}
-
-export function release_to_locator(release: Release, known_packages: Array<Package>): Locator {
-    let ppkg = id_to_object(release.parent_package_id, known_packages)
-    return new Locator(ppkg.repository, ppkg.slug, release.id)
 }
 
 // When we parse the package JSON to an object, the object doesn't have any function as JSON doesn't store them, so we have to do this
@@ -199,22 +195,6 @@ export function names_to_objects(package_names: Array<string>, known_packages: a
     return objects;
 }
 
-export function id_to_object(id: number, known_packages: Array<Package>): Package {
-    return known_packages.filter(pkg => pkg.id === id)[0];    
-}
-
-export function repo_id_to_object(known_packages: Array<Package>, repo_id: number, repo?: string): Package {
-    known_packages = known_packages.filter( (pkg) => {
-        pkg.repository_id == repo_id
-    });
-    if(repo) {
-        known_packages = known_packages.filter( (pkg) => {
-            pkg.repository == repo
-        });
-    }
-    return known_packages[0]
-}
-
 export function get_desired_release(pkg: Package, game_version: string, release_version?: string): Release{
     // NOTE: Uses `latest` unless a version is specified
     let options = pkg.releases.filter( (value) => {
@@ -244,16 +224,10 @@ export function release_compatible(release1: string, release2: string) {
 }
 
 export function unify_indexes(indexes: Array<Array<Package>>) {
-    let id_counter: number = 0;
     let unified_index: Array<Package> = []
     for(const index of indexes) {
         for(const pkg of index) {
-            pkg.id = id_counter;
-            for(let i = 0; i < pkg.releases.length; i++) {
-                pkg.releases[i].parent_package_id = id_counter
-            }
             unified_index.push(pkg);
-            id_counter += 1;
         }
     }
     return unified_index;
@@ -261,7 +235,7 @@ export function unify_indexes(indexes: Array<Array<Package>>) {
 
 export function check_if_installed(release: Release, fold: string, known_packages: Array<Package>): boolean {
     let installed = read_installed_json(fold)
-    let ppkg = id_to_object(release.parent_package_id, known_packages)
+    let ppkg = locator_to_package(Locator.from_short_slug(release.parent_locator), known_packages)
     let a = installed.locators.filter( loc => loc.slug == ppkg.slug )
 
     return a.length > 0
@@ -270,7 +244,7 @@ export function check_if_installed(release: Release, fold: string, known_package
 export function add_as_installed(release: Release, fold: string, known_packages: Array<Package>) {
     let file = read_installed_json(fold)
 
-    let locator = release_to_locator(release, known_packages)
+    let locator = Locator.from_short_slug(release.parent_locator);
     if (!(file.locators.map(loc => loc.short_slug).includes(locator.short_slug))) {
         let installed_locator = new InstalledLocator(locator.repo, locator.slug, locator.rel_id, Date.now())
         file.locators.push(installed_locator);

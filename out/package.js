@@ -19,7 +19,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.add_as_installed = exports.check_if_installed = exports.unify_indexes = exports.release_compatible = exports.get_desired_release = exports.repo_id_to_object = exports.id_to_object = exports.names_to_objects = exports.read_installed_json = exports.read_pkg_json = exports.get_total_downloads = exports.release_to_locator = exports.locator_to_package = exports.locator_to_release = exports.InstalledLocator = exports.Locator = exports.Repository = exports.Package = exports.Dependency = exports.Release = void 0;
+exports.add_as_installed = exports.check_if_installed = exports.unify_indexes = exports.release_compatible = exports.get_desired_release = exports.names_to_objects = exports.read_installed_json = exports.read_pkg_json = exports.get_total_downloads = exports.locator_to_package = exports.locator_to_release = exports.InstalledLocator = exports.Locator = exports.Repository = exports.Package = exports.Release = void 0;
 const fs = __importStar(require("fs"));
 const configuration = __importStar(require("./configuration"));
 const util = __importStar(require("./util"));
@@ -28,17 +28,12 @@ var prompt = require('prompt-sync')();
 class Release {
 }
 exports.Release = Release;
-class Dependency {
-}
-exports.Dependency = Dependency;
 class Package {
-    constructor(id, name, description, releases, repository, repository_id) {
-        this.id = id;
+    constructor(name, description, releases, repository) {
         this.name = name;
         this.description = description;
         this.releases = releases;
         this.repository = repository;
-        this.repository_id = repository_id;
     }
 }
 exports.Package = Package;
@@ -55,8 +50,16 @@ class Locator {
         this.slug = slug;
         this.rel_id = rel_id;
     }
+    static from_short_slug(sslug) {
+        let split = sslug.split("->");
+        let rel_id = split.pop();
+        let slug = split.pop();
+        let repo = split.pop();
+        util.print_debug([sslug, split, rel_id, slug, repo]);
+        return new this(repo, slug, Number(rel_id));
+    }
     get short_slug() {
-        return `${this.repo}/${this.slug}/${this.rel_id}`;
+        return `${this.repo}->${this.slug}->${this.rel_id}`;
     }
 }
 exports.Locator = Locator;
@@ -68,6 +71,7 @@ class InstalledLocator extends Locator {
 }
 exports.InstalledLocator = InstalledLocator;
 function locator_to_release(locator, known_packages) {
+    util.print_debug([locator.repo]);
     known_packages = known_packages.filter((pkg) => { return pkg.repository == locator.repo; });
     if (known_packages.length == 0) {
         util.print_error(`Repository ${locator.repo} not found`);
@@ -90,6 +94,7 @@ function locator_to_release(locator, known_packages) {
 }
 exports.locator_to_release = locator_to_release;
 function locator_to_package(locator, known_packages) {
+    util.print_debug([locator.short_slug, locator.repo]);
     known_packages = known_packages.filter((pkg) => { return pkg.repository == locator.repo; });
     if (known_packages.length == 0) {
         util.print_error(`Repository ${locator.repo} not found`);
@@ -103,11 +108,6 @@ function locator_to_package(locator, known_packages) {
     return known_packages[0];
 }
 exports.locator_to_package = locator_to_package;
-function release_to_locator(release, known_packages) {
-    let ppkg = id_to_object(release.parent_package_id, known_packages);
-    return new Locator(ppkg.repository, ppkg.slug, release.id);
-}
-exports.release_to_locator = release_to_locator;
 // When we parse the package JSON to an object, the object doesn't have any function as JSON doesn't store them, so we have to do this
 function get_total_downloads(pkg) {
     let all = 0;
@@ -188,22 +188,6 @@ function names_to_objects(package_names, known_packages, exit) {
     return objects;
 }
 exports.names_to_objects = names_to_objects;
-function id_to_object(id, known_packages) {
-    return known_packages.filter(pkg => pkg.id === id)[0];
-}
-exports.id_to_object = id_to_object;
-function repo_id_to_object(known_packages, repo_id, repo) {
-    known_packages = known_packages.filter((pkg) => {
-        pkg.repository_id == repo_id;
-    });
-    if (repo) {
-        known_packages = known_packages.filter((pkg) => {
-            pkg.repository == repo;
-        });
-    }
-    return known_packages[0];
-}
-exports.repo_id_to_object = repo_id_to_object;
 function get_desired_release(pkg, game_version, release_version) {
     // NOTE: Uses `latest` unless a version is specified
     let options = pkg.releases.filter((value) => {
@@ -231,16 +215,10 @@ function release_compatible(release1, release2) {
 }
 exports.release_compatible = release_compatible;
 function unify_indexes(indexes) {
-    let id_counter = 0;
     let unified_index = [];
     for (const index of indexes) {
         for (const pkg of index) {
-            pkg.id = id_counter;
-            for (let i = 0; i < pkg.releases.length; i++) {
-                pkg.releases[i].parent_package_id = id_counter;
-            }
             unified_index.push(pkg);
-            id_counter += 1;
         }
     }
     return unified_index;
@@ -248,14 +226,14 @@ function unify_indexes(indexes) {
 exports.unify_indexes = unify_indexes;
 function check_if_installed(release, fold, known_packages) {
     let installed = read_installed_json(fold);
-    let ppkg = id_to_object(release.parent_package_id, known_packages);
+    let ppkg = locator_to_package(Locator.from_short_slug(release.parent_locator), known_packages);
     let a = installed.locators.filter(loc => loc.slug == ppkg.slug);
     return a.length > 0;
 }
 exports.check_if_installed = check_if_installed;
 function add_as_installed(release, fold, known_packages) {
     let file = read_installed_json(fold);
-    let locator = release_to_locator(release, known_packages);
+    let locator = Locator.from_short_slug(release.parent_locator);
     if (!(file.locators.map(loc => loc.short_slug).includes(locator.short_slug))) {
         let installed_locator = new InstalledLocator(locator.repo, locator.slug, locator.rel_id, Date.now());
         file.locators.push(installed_locator);

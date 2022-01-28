@@ -8,14 +8,15 @@ var FormData = require('form-data');
 
 
 export function download_release(release: packages.Release, mods_folder: string, known_packages) {
-    let parent_pkg = packages.id_to_object(release.parent_package_id, known_packages);
+    let parent_pkg = packages.locator_to_package(packages.Locator.from_short_slug(release.parent_locator), known_packages);
     const file = fs.createWriteStream(mods_folder+"/" + parent_pkg.name + "_" + release.game_version + "_v_" + release.version + ".jar")
     if(release.prefer_link) {
+        util.print_debug(release.direct_link);
         util.adapter_for(release.direct_link).get(release.direct_link, (response) => {
             response.pipe(file);
         })
     } else {
-        util.adapter_for(parent_pkg.repository).get(`${parent_pkg.repository}/v1/download_release/${parent_pkg.repository_id}/${release.id}`, (response) => {
+        util.adapter_for(parent_pkg.repository).get(`${parent_pkg.repository}/v1/download_release/${parent_pkg.slug}/${release.id}`, (response) => {
             response.pipe(file);
         });
     }
@@ -117,7 +118,7 @@ export function update_all_if_needed(installed: filedef.installed, known_package
 
     util.print_note(`Updating packages..`)
     for (const rel of to_update) {
-        let lloc = packages.release_to_locator(rel, known_packages)
+        let lloc = packages.Locator.from_short_slug(rel.parent_locator);
         installed.locators = installed.locators.filter( loc => !(loc.slug == lloc.slug && loc.repo == lloc.repo) ); // remove old release
         let new_locator = new packages.InstalledLocator(lloc.repo, lloc.slug, lloc.rel_id, Date.now())
         installed.locators.push(new_locator)

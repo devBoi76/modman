@@ -44,19 +44,19 @@ export function ask_user(text: string, options: Array<string>, default_option: s
 	const prompt_str = colors.Bright + text + " [" + options_str + "]: " + colors.Reset;
 	return prmpt(prompt_str, default_option);
 }
-export function print_error(text: string) {
+export function print_error(text: any) {
 	console.log(`${colors.BgRedBright}${colors.FgBlack}[ERROR]${colors.Reset}${colors.Bright} ${text}${colors.Reset}`);
 }
-export function print_note(text: string) {
+export function print_note(text: any) {
 	console.log(`${colors.BgCyan}${colors.FgBlack}[NOTE]${colors.Reset} ${text}`);
 }
 
-export function print_debug(text: string) {
-	console.log(`${colors.BgYellowBright + colors.FgBlack}[DEBUG]${colors.Reset + colors.Dim} ${text + colors.Reset}`);
+export function print_debug(text: any) {
+	console.log(`${colors.BgYellowBright + colors.FgBlack}[DEBUG]${colors.Reset + colors.Dim} ${text}${colors.Reset}`);
 }
 
 export function print_release(release: packages.Release, known_packages: Array<packages.Package>): void {
-    let a = packages.id_to_object(release.parent_package_id, known_packages);
+    let a = packages.locator_to_package(packages.Locator.from_short_slug(release.parent_locator), known_packages);
 	if(release.is_dependency){
 		console.log(`${colors.BgGreen}${colors.FgBlack}[Dependency]${colors.Reset} ${a.name} version ${release.version} for Minecraft ${release.game_version}`)
 		return;
