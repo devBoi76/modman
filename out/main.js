@@ -239,7 +239,13 @@ function main() {
             case "list": {
                 let known_packages = filedef.get_index(parsed_args.config_folder);
                 let installed = packages.read_installed_json(parsed_args.config_folder);
-                util.print_note("Installed Mods:");
+                if (installed.locators.length > 0) {
+                    util.print_note("Installed Mods:");
+                }
+                else {
+                    util.print_note("No mods installed");
+                    process.exit(0);
+                }
                 for (const loc of installed.locators) {
                     let rel = packages.locator_to_release(loc, known_packages);
                     util.print_release(rel, known_packages);
