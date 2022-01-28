@@ -55,7 +55,7 @@ class Locator {
         let rel_id = split.pop();
         let slug = split.pop();
         let repo = split.pop();
-        util.print_debug([sslug, split, rel_id, slug, repo]);
+        // util.print_debug([sslug, split, rel_id, slug, repo])
         return new this(repo, slug, Number(rel_id));
     }
     get short_slug() {
@@ -71,7 +71,7 @@ class InstalledLocator extends Locator {
 }
 exports.InstalledLocator = InstalledLocator;
 function locator_to_release(locator, known_packages) {
-    util.print_debug([locator.repo]);
+    // util.print_debug([locator.repo])
     known_packages = known_packages.filter((pkg) => { return pkg.repository == locator.repo; });
     if (known_packages.length == 0) {
         util.print_error(`Repository ${locator.repo} not found`);
@@ -79,7 +79,7 @@ function locator_to_release(locator, known_packages) {
     }
     known_packages = known_packages.filter((pkg) => { return pkg.slug == locator.slug; });
     if (known_packages.length == 0) {
-        util.print_error(`Package ${locator.repo}/${locator.slug} not found`);
+        util.print_error(`Package ${locator.repo}->${locator.slug} not found`);
         process.exit();
     }
     let rel = undefined;
@@ -94,7 +94,7 @@ function locator_to_release(locator, known_packages) {
 }
 exports.locator_to_release = locator_to_release;
 function locator_to_package(locator, known_packages) {
-    util.print_debug([locator.short_slug, locator.repo]);
+    // util.print_debug([locator.short_slug, locator.repo])
     known_packages = known_packages.filter((pkg) => { return pkg.repository == locator.repo; });
     if (known_packages.length == 0) {
         util.print_error(`Repository ${locator.repo} not found`);
@@ -102,7 +102,7 @@ function locator_to_package(locator, known_packages) {
     }
     known_packages = known_packages.filter((pkg) => { return pkg.slug == locator.slug; });
     if (known_packages.length == 0) {
-        util.print_error(`Package ${locator.repo}/${locator.slug} not found`);
+        util.print_error(`Package ${locator.repo}->${locator.slug} not found`);
         process.exit();
     }
     return known_packages[0];
