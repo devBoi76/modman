@@ -19,9 +19,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.add_as_installed = exports.check_if_installed = exports.unify_indexes = exports.release_compatible = exports.get_desired_release = exports.names_to_objects = exports.read_installed_json = exports.read_pkg_json = exports.get_total_downloads = exports.locator_to_package = exports.locator_to_release = exports.InstalledLocator = exports.Locator = exports.Repository = exports.Package = exports.Release = void 0;
+exports.add_as_installed = exports.check_if_installed = exports.unify_indexes = exports.release_compatible = exports.get_desired_release = exports.names_to_objects = exports.read_installed_json = exports.get_total_downloads = exports.locator_to_package = exports.locator_to_release = exports.InstalledLocator = exports.Locator = exports.Repository = exports.Package = exports.Release = void 0;
 const fs = __importStar(require("fs"));
-const configuration = __importStar(require("./configuration"));
 const util = __importStar(require("./util"));
 const filedef = __importStar(require("./filedef"));
 var prompt = require('prompt-sync')();
@@ -120,25 +119,6 @@ function get_total_downloads(pkg) {
     return all;
 }
 exports.get_total_downloads = get_total_downloads;
-function read_pkg_json(conf_fold) {
-    let file = undefined;
-    let json = undefined;
-    configuration.ensure_repos();
-    try {
-        file = fs.readFileSync(conf_fold + "/pkg_idx.json", "utf8");
-        json = JSON.parse(file);
-    }
-    catch (err) {
-        util.print_error("Could not read " + conf_fold + "/pkg_idx.json");
-        util.print_note("Perhaps you haven't added any repositories. Consider adding one with `modman add_repo <repository url>`");
-        process.exit();
-    }
-    if (json.length == 0) {
-        util.print_error("No known packages found");
-    }
-    return json;
-}
-exports.read_pkg_json = read_pkg_json;
 function read_installed_json(fold) {
     let json = undefined;
     try {

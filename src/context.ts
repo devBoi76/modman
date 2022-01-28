@@ -6,10 +6,10 @@ export function point_to_mods_folder(): string {
 
     if(cwd[cwd.length - 1] == ".minecraft" || cwd[cwd.length - 1] == "minecraft") { // inside .minecraft, point to .minecraft/mods
         cwd.push("mods")
-        util.print_debug(`cwd is ${cwd.join("/")}`)
+        // util.print_debug(`cwd is ${cwd.join("/")}`)
         return cwd.join("/")
     } else {
-        util.print_debug(`cwd is ${cwd.join("/")}`)
+        // util.print_debug(`cwd is ${cwd.join("/")}`)
         return cwd.join("/")
     }
 }

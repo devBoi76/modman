@@ -20,17 +20,16 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.point_to_modman_folder = exports.point_to_mods_folder = void 0;
-const util = __importStar(require("./util"));
 const fs = __importStar(require("fs"));
 function point_to_mods_folder() {
     let cwd = process.cwd().split("/");
     if (cwd[cwd.length - 1] == ".minecraft" || cwd[cwd.length - 1] == "minecraft") { // inside .minecraft, point to .minecraft/mods
         cwd.push("mods");
-        util.print_debug(`cwd is ${cwd.join("/")}`);
+        // util.print_debug(`cwd is ${cwd.join("/")}`)
         return cwd.join("/");
     }
     else {
-        util.print_debug(`cwd is ${cwd.join("/")}`);
+        // util.print_debug(`cwd is ${cwd.join("/")}`)
         return cwd.join("/");
     }
 }

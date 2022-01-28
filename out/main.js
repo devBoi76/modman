@@ -35,6 +35,7 @@ const configuration = __importStar(require("./configuration"));
 const context = __importStar(require("./context"));
 const api = __importStar(require("./api"));
 const modrinth = __importStar(require("./modrinth_api"));
+const filedef = __importStar(require("./filedef"));
 const fs = __importStar(require("fs"));
 // get config
 //ensure that a file at ./modman/conf.js is accesible
@@ -65,7 +66,7 @@ function main() {
                     util.print_note("example usage is `modman install JEI`");
                     process.exit();
                 }
-                let known_packages = packages.read_pkg_json(parsed_args.config_folder);
+                let known_packages = filedef.get_index(parsed_args.config_folder);
                 let desired_pkg_names = parsed_args.words;
                 let desired_pkg_objects = packages.names_to_objects(desired_pkg_names, known_packages, !config.search_modrinth); // Set
                 let desired_releases = new Set();
@@ -126,6 +127,28 @@ function main() {
                 // END MODRINTH
                 break;
             }
+            case "remove": {
+                if (parsed_args.words.length == 0) {
+                    util.print_error("No mods to remove specified");
+                    util.print_note("Example usage: `modman remove JEI`");
+                    process.exit();
+                }
+                const known_packages = filedef.get_index(parsed_args.config_folder);
+                let installed = filedef.get_installed(parsed_args.config_folder);
+                let objects_to_remove = packages.names_to_objects(parsed_args.words, known_packages, false);
+                for (const pkg of objects_to_remove) {
+                    if (!installed.locators.map((loc) => loc.slug).includes(pkg.slug)) {
+                        util.print_note(`Package ${pkg.name} is not installed so not removing`);
+                    }
+                    else {
+                        installed.locators = installed.locators.filter((loc) => {
+                            return loc.slug != pkg.slug;
+                        });
+                    }
+                }
+                filedef.write(installed, "installed", parsed_args.config_folder);
+                break;
+            }
             case "sync": {
                 api.sync_all_repos();
                 break;
@@ -183,7 +206,7 @@ function main() {
                     util.print_note("example usage is `./main.js search JEI`");
                     process.exit();
                 }
-                let known_packages = packages.read_pkg_json(parsed_args.config_folder);
+                let known_packages = filedef.get_index(parsed_args.config_folder);
                 let desired_pkg_names = parsed_args.words;
                 let desired_pkg_objects = packages.names_to_objects(desired_pkg_names, known_packages, !config.search_modrinth);
                 for (const pkg of desired_pkg_objects) {
@@ -214,7 +237,7 @@ function main() {
                 break;
             }
             case "list": {
-                let known_packages = packages.read_pkg_json(parsed_args.config_folder);
+                let known_packages = filedef.get_index(parsed_args.config_folder);
                 let installed = packages.read_installed_json(parsed_args.config_folder);
                 util.print_note("Installed Mods:");
                 for (const loc of installed.locators) {
@@ -224,7 +247,7 @@ function main() {
                 break;
             }
             case "list_all": {
-                let known_packages = packages.read_pkg_json(parsed_args.config_folder);
+                let known_packages = filedef.get_index(parsed_args.config_folder);
                 util.print_note("Known Mods:");
                 for (const pkg of known_packages) {
                     util.print_package(pkg);
@@ -232,7 +255,7 @@ function main() {
                 break;
             }
             case "update": {
-                let known_packages = packages.read_pkg_json(parsed_args.config_folder);
+                let known_packages = filedef.get_index(parsed_args.config_folder);
                 let installed = packages.read_installed_json(parsed_args.config_folder);
                 api.sync_all_repos();
                 api.update_all_if_needed(installed, known_packages, parsed_args.config_folder, parsed_args.version);

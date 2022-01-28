@@ -129,24 +129,6 @@ export function get_total_downloads(pkg: Package) {
     return all;
 }
 
-export function read_pkg_json(conf_fold: string): Array<Package> {
-
-    let file: string = undefined;
-    let json: Array<Package> = undefined;
-    configuration.ensure_repos();
-    try {
-        file = fs.readFileSync(conf_fold+"/pkg_idx.json", "utf8");
-        json = JSON.parse(file);
-    } catch (err) {
-        util.print_error("Could not read "+ conf_fold+"/pkg_idx.json");
-        util.print_note("Perhaps you haven't added any repositories. Consider adding one with `modman add_repo <repository url>`");
-        process.exit();
-    }
-    if (json.length == 0) {
-        util.print_error("No known packages found")
-    }
-    return json;
-}
 
 export function read_installed_json(fold: string): filedef.installed {
     let json: filedef.installed = undefined

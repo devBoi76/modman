@@ -126,7 +126,7 @@ exports.ensure_file = ensure_file;
 ;
 function ensure_repos() {
     let fold = context.point_to_modman_folder();
-    util.print_debug(fold);
+    // util.print_debug(fold)
     let config = JSON.parse(fs.readFileSync(fold + "/conf.json", "utf8"));
     if (config.repos.length == 0) {
         util.print_error("You haven't added any repositories");
