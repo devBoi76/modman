@@ -23,7 +23,7 @@ exports.adapter_for = exports.similarity = exports.most_similar = exports.get_he
 let prmpt = require("prompt-sync")({ sigint: true });
 const packages = __importStar(require("./package"));
 const xmlhpr = __importStar(require("xmlhttprequest"));
-exports.possible_options = ["install", "sync", "update", "search", "list", "help", "add_repo", "remove_repo"];
+exports.possible_options = ["install", "sync", "update", "search", "list", "list_all", "help", "add_repo", "remove_repo"];
 exports.possible_args = {
     VERSION: "--version",
     INSTALL_METHOD: "--method" // packageBehavior

@@ -35,7 +35,7 @@ async function main(){
 		case "install": {
 			if(parsed_args.words.length == 0) {
 				util.print_error("No packages to install");
-				util.print_note("example usage is `./main.js install JEI`");
+				util.print_note("example usage is `modman install JEI`");
 				process.exit();
 			}
 			let known_packages = packages.read_pkg_json(parsed_args.config_folder);
@@ -209,6 +209,14 @@ async function main(){
 			for(const loc of installed.locators) {
 				let rel = packages.locator_to_release(loc, known_packages)
 				util.print_release(rel, known_packages);
+			}
+			break;
+		}
+		case "list_all": {
+			let known_packages = packages.read_pkg_json(parsed_args.config_folder);
+			util.print_note("Known Mods:")
+			for(const pkg of known_packages) {
+				util.print_package(pkg);
 			}
 			break;
 		}
