@@ -130,13 +130,13 @@ export function get_total_downloads(pkg: Package) {
 }
 
 
-export function read_installed_json(fold: string): filedef.installed {
-    let json: filedef.installed = undefined
+export function read_installed_json(fold: string): filedef.Installed {
+    let json: filedef.Installed = undefined
     try {
         let file = fs.readFileSync(fold+"/installed.json", "utf8")
         json = JSON.parse(file)
     } catch (err) {
-        json = new filedef.installed()
+        json = new filedef.Installed()
     }
     return json
 }

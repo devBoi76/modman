@@ -53,7 +53,7 @@ export function parse_args(options: Array<string>) {
 
 function create_template_file(fold: string) {
 	// const writer = fs.createWriteStream("./.modman/conf.json", {flags: "w"});
-	const default_json = new filedef.config()
+	const default_json = new filedef.Config()
 	fs.writeFileSync(fold+"/conf.json", JSON.stringify(default_json));
 };
 
@@ -64,7 +64,7 @@ function create_template_idx_file(fold: string) {
 };
 
 function create_template_installed_file(fold: string) {
-	const file = new filedef.installed()
+	const file = new filedef.Installed()
 	fs.writeFileSync(fold+"/installed.json", JSON.stringify(file))
 }
 

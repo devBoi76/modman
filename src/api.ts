@@ -101,7 +101,7 @@ export function sync_all_repos() {
     util.print_note("Done!")
 }
 
-export function update_all_if_needed(installed: filedef.installed, known_packages: Array<packages.Package>, fold: string, game_version: string) {
+export function update_all_if_needed(installed: filedef.Installed, known_packages: Array<packages.Package>, fold: string, game_version: string) {
     // we sync repos before calling this function, so we have all up to date packages
 
     let to_update: Array<packages.Release> = []
