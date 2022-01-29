@@ -47,9 +47,13 @@ exports.Version = Version;
 class VersionFile {
 }
 exports.VersionFile = VersionFile;
-class ModirinthPackage extends packages.Package {
+class ModirinthPackage {
     constructor(id, name, description, versions, downloads) {
-        super(name, description, [], "https://modrinth.com");
+        // super(name, description, [], "https://modrinth.com");
+        this.name = name;
+        this.description = description;
+        this.releases = [];
+        this.repository = "https://modrinth.com";
         this.modirinth_id = id;
         this.versions = versions;
         this.downloads = downloads;

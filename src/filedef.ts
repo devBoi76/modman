@@ -1,17 +1,18 @@
 import * as packages from "./package"
 import * as util from "./util"
 import * as configuration from "./configuration"
+import * as interfaces from "./interfaces"
 
 import * as fs from "fs"
 
 
 // This file is meant to define the layout of files that modman interfaces with and provide helper functions to interface with them
+// It also contains some classes like `filedef.Package`. The main difference is that `filedef.Package` only contains the stored json fields, while `packages.Package` is a propper class with its own functions
 
-
-export function get_index(conf_fold: string): Array<packages.Package> {
+export function get_index(conf_fold: string): Array<interfaces.PackageData> {
 
     let file: string = undefined;
-    let json: Array<packages.Package> = undefined;
+    let json: Array<interfaces.PackageData> = undefined;
     configuration.ensure_repos();
     try {
         file = fs.readFileSync(conf_fold+"/pkg_idx.json", "utf8");
@@ -27,7 +28,7 @@ export function get_index(conf_fold: string): Array<packages.Package> {
     return json;
 }
 
-export function write(file: Installed | Config, name: "installed"|"config", fold: string) {
+export function write(file: interfaces.Installed | interfaces.Config, name: "installed"|"config", fold: string) {
     switch(name) {
         case "installed":
             fs.writeFileSync(fold+"/installed.json", JSON.stringify(file))
@@ -38,17 +39,14 @@ export function write(file: Installed | Config, name: "installed"|"config", fold
     }
 } 
 
-
-export class Installed {
-    locators: Array<packages.InstalledLocator>
-    constructor() {
-        this.locators = []
-    }
+export const default_installed: interfaces.Installed = {
+    locators: []
 }
 
-export function get_installed(fold: string) {
+
+export function get_installed(fold: string): interfaces.Installed {
     let file: string = undefined;
-    let json: Installed = undefined;
+    let json: interfaces.Installed = undefined;
     try {
         file = fs.readFileSync(fold+"/installed.json", "utf-8");
         json = JSON.parse(file);
@@ -60,20 +58,15 @@ export function get_installed(fold: string) {
     return json;
 }
 
-export class Config {
-    game_version: string;
-    repos: Array<packages.Repository>;
-    search_modrinth: boolean;
-    constructor() {
-        this.game_version = "1.16.5";
-        this.repos = [];
-        this.search_modrinth = false;
-    }
+export const default_config: interfaces.Config = {    
+    game_version: "1.16.5",
+    repos: [],
+    search_modrinth: false 
 }
 
-export function get_config(fold: string): Config {
+export function get_config(fold: string): interfaces.Config {
     let file: string = undefined;
-    let json: Config = undefined;
+    let json: interfaces.Config = undefined;
     try {
         file = fs.readFileSync(fold+"/conf.json", "utf-8");
         json = JSON.parse(file);

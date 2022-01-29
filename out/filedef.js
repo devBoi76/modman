@@ -19,10 +19,12 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.config = exports.get_installed = exports.installed = exports.write = exports.get_index = void 0;
+exports.get_config = exports.default_config = exports.get_installed = exports.default_installed = exports.write = exports.get_index = void 0;
 const util = __importStar(require("./util"));
 const configuration = __importStar(require("./configuration"));
 const fs = __importStar(require("fs"));
+// This file is meant to define the layout of files that modman interfaces with and provide helper functions to interface with them
+// It also contains some classes like `filedef.Package`. The main difference is that `filedef.Package` only contains the stored json fields, while `packages.Package` is a propper class with its own functions
 function get_index(conf_fold) {
     let file = undefined;
     let json = undefined;
@@ -53,12 +55,9 @@ function write(file, name, fold) {
     }
 }
 exports.write = write;
-class installed {
-    constructor() {
-        this.locators = [];
-    }
-}
-exports.installed = installed;
+exports.default_installed = {
+    locators: []
+};
 function get_installed(fold) {
     let file = undefined;
     let json = undefined;
@@ -74,12 +73,24 @@ function get_installed(fold) {
     return json;
 }
 exports.get_installed = get_installed;
-class config {
-    constructor() {
-        this.game_version = "1.16.5";
-        this.repos = [];
-        this.search_modrinth = false;
+exports.default_config = {
+    game_version: "1.16.5",
+    repos: [],
+    search_modrinth: false
+};
+function get_config(fold) {
+    let file = undefined;
+    let json = undefined;
+    try {
+        file = fs.readFileSync(fold + "/conf.json", "utf-8");
+        json = JSON.parse(file);
     }
+    catch (err) {
+        util.print_error("Could not read " + fold + "/conf.json");
+        console.error(err);
+        process.exit(1);
+    }
+    return json;
 }
-exports.config = config;
+exports.get_config = get_config;
 //# sourceMappingURL=filedef.js.map

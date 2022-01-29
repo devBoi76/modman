@@ -1,8 +1,9 @@
-import * as packages from "./package";
+import * as packages from "./package"
+import * as interfaces from "./interfaces"
 import * as util from "./util"
 import * as https from "https"
 import * as fs from "fs"
-import fetch from "node-fetch";
+import fetch from "node-fetch"
 const api_url = "https://api.modrinth.com"
 
 export class ModResult {
@@ -47,13 +48,24 @@ export class VersionFile {
     filename: string;
 }
 
-export class ModirinthPackage extends packages.Package {
+export class ModirinthPackage implements interfaces.PackageData {
+    name: string;
+    description: string;
+    releases: interfaces.ReleaseData[];
+    repository: string;
+    authors: string[];
+    slug: string;
+
     versions: Array<Version>;
     modirinth_id: string;
     downloads: number;
     
     constructor(id: string, name: string, description: string, versions: Array<Version>, downloads: number) {
-        super(name, description, [], "https://modrinth.com");
+        // super(name, description, [], "https://modrinth.com");
+        this.name = name;
+        this.description = description;
+        this.releases = [];
+        this.repository = "https://modrinth.com";
         this.modirinth_id = id;
         this.versions = versions;
         this.downloads = downloads;

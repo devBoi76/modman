@@ -2,6 +2,7 @@
 
 import * as util from "./util";
 import * as packages from "./package";
+import * as interfaces from "./interfaces"
 import * as configuration from "./configuration";
 import * as context from "./context"
 import * as api from "./api";
@@ -41,9 +42,9 @@ async function main(){
 			}
 			let known_packages = filedef.get_index(parsed_args.config_folder);
 			let desired_pkg_names = parsed_args.words;
-			let desired_pkg_objects: Set<packages.Package> = packages.names_to_objects(desired_pkg_names, known_packages, !config.search_modrinth); // Set
+			let desired_pkg_objects: Set<interfaces.PackageData> = packages.names_to_objects(desired_pkg_names, known_packages, !config.search_modrinth); // Set
 			
-			let desired_releases: Set<packages.Release> = new Set<packages.Release>();
+			let desired_releases: Set<interfaces.ReleaseData> = new Set<interfaces.ReleaseData>();
 
 			for(const entry of desired_pkg_objects.entries()) {
 				let r = packages.get_desired_release(entry[0], parsed_args.version)
@@ -190,7 +191,7 @@ async function main(){
 			}
 		let known_packages = filedef.get_index(parsed_args.config_folder);
 		let desired_pkg_names = parsed_args.words;
-		let desired_pkg_objects: Set<packages.Package> = packages.names_to_objects(desired_pkg_names, known_packages, !config.search_modrinth);
+		let desired_pkg_objects: Set<interfaces.PackageData> = packages.names_to_objects(desired_pkg_names, known_packages, !config.search_modrinth);
 		for (const pkg of desired_pkg_objects) {
 			util.print_package(pkg);
 		}

@@ -3,11 +3,14 @@ import * as fs from "fs"
 import * as packages from "./package"
 import * as configuration from "./configuration"
 import * as filedef from "./filedef"
+import * as interfaces from "./interfaces"
+
+
 
 var FormData = require('form-data');
 
 
-export function download_release(release: packages.Release, mods_folder: string, known_packages) {
+export function download_release(release: interfaces.ReleaseData, mods_folder: string, known_packages) {
     let parent_pkg = packages.locator_to_package(packages.Locator.from_short_slug(release.parent_locator), known_packages);
     const file = fs.createWriteStream(mods_folder+"/" + parent_pkg.name + "_" + release.game_version + "_v_" + release.version + ".jar")
     if(release.prefer_link) {
@@ -22,7 +25,7 @@ export function download_release(release: packages.Release, mods_folder: string,
     }
 }
 
-export function download_locator(locator: packages.Locator, mods_folder: string, known_packages: Array<packages.Package>) {
+export function download_locator(locator: packages.Locator, mods_folder: string, known_packages: Array<interfaces.PackageData>) {
     let rel = packages.locator_to_release(locator, known_packages);
     download_release(rel, mods_folder, known_packages);
 }
@@ -47,22 +50,26 @@ export function sync_packages_one_repo(repo: string) {
 
 export function add_repos(repos: Array<string>) {
     let config = JSON.parse(fs.readFileSync("./.modman/conf.json", {encoding:'utf8', flag:'r'}))
-    let repo_objs = new Array<packages.Repository>()
+    let repo_objs = new Array<interfaces.RepositoryData>()
     for(const repo of repos) {
-        let resp = util.get_sync(`${repo}/get_repo_info`);
-        if (resp == undefined) {
-            util.print_error(`Repository ${repo} could not be reached`);
-            util.print_note("Perhaps it is offline or you made a typo");
-            process.exit()
+        // let resp = util.get_sync(`${repo}/get_repo_info`);
+        // if (resp == undefined) {
+        //     util.print_error(`Repository ${repo} could not be reached`);
+        //     util.print_note("Perhaps it is offline or you made a typo");
+        //     process.exit()
+        // }
+        // console.log(resp);
+        // resp = JSON.parse(resp);
+        // console.log(resp);
+        // if(![1, 2].includes(resp.api_type)) {
+        //     util.print_error(`Unknown repository type ${resp.api_type} for ${repo}`);
+        //     process.exit();
+        // }
+        let new_repo: interfaces.RepositoryData = {
+            url: repo, 
+            api_type: 1
         }
-        console.log(resp);
-        resp = JSON.parse(resp);
-        console.log(resp);
-        if(![1, 2].includes(resp.api_type)) {
-            util.print_error(`Unknown repository type ${resp.api_type} for ${repo}`);
-            process.exit();
-        }
-        repo_objs.push(new packages.Repository(repo, resp.api_type));
+        repo_objs.push(new_repo);
     }
     config.repos = config.repos.concat(repo_objs);
     fs.writeFileSync("./.modman/conf.json", JSON.stringify(config));
@@ -72,7 +79,7 @@ export function add_repos(repos: Array<string>) {
 export function remove_repo(repo: string) {
     let config = JSON.parse(fs.readFileSync("./.modman/conf.json", {encoding:'utf8', flag:'r'}))
     let tmp = config.repos.length;
-    config.repos = config.repos.filter( (repository: packages.Repository) => {
+    config.repos = config.repos.filter( (repository: interfaces.RepositoryData) => {
         return repository.url != repo;
     });
     if (config.repos.length == tmp) {
@@ -86,7 +93,7 @@ export function sync_all_repos() {
     configuration.ensure_repos();
     util.print_note("Synchronizing with all known repositories..");
     let config = JSON.parse(fs.readFileSync("./.modman/conf.json", {encoding:'utf8', flag:'r'}));
-    let indexes_to_sync: Array<Array<packages.Package>> = [];
+    let indexes_to_sync: Array<Array<interfaces.PackageData>> = [];
     for(const repo of config.repos) {
         if(repo.api_type == 2){
             util.print_error("TODO: api v2 support");
@@ -101,10 +108,10 @@ export function sync_all_repos() {
     util.print_note("Done!")
 }
 
-export function update_all_if_needed(installed: filedef.Installed, known_packages: Array<packages.Package>, fold: string, game_version: string) {
+export function update_all_if_needed(installed: interfaces.Installed, known_packages: Array<interfaces.PackageData>, fold: string, game_version: string) {
     // we sync repos before calling this function, so we have all up to date packages
 
-    let to_update: Array<packages.Release> = []
+    let to_update: Array<interfaces.ReleaseData> = []
 
     for (const locator of installed.locators) {
         let rel = packages.locator_to_release(locator, known_packages);

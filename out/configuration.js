@@ -22,7 +22,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ensure_repos = exports.ensure_file = exports.parse_args = void 0;
 const fs = __importStar(require("fs"));
 const util = __importStar(require("./util"));
-const api = __importStar(require("./api"));
 const context = __importStar(require("./context"));
 const filedef = __importStar(require("./filedef"));
 function parse_args(options) {
@@ -72,18 +71,18 @@ function parse_args(options) {
 exports.parse_args = parse_args;
 function create_template_file(fold) {
     // const writer = fs.createWriteStream("./.modman/conf.json", {flags: "w"});
-    const default_json = new filedef.config();
+    const default_json = filedef.default_config;
     fs.writeFileSync(fold + "/conf.json", JSON.stringify(default_json));
 }
 ;
 function create_template_idx_file(fold) {
     // const writer = fs.createWriteStream("./.modman/pkg_idx.json", {flags: "w"});
     // writer.write(api.get_available_packages("http://localhost:5000"));
-    fs.writeFileSync(fold + "/pkg_idx.json", api.get_available_packages("http://localhost:5000"));
+    fs.writeFileSync(fold + "/pkg_idx.json", "{}");
 }
 ;
 function create_template_installed_file(fold) {
-    const file = new filedef.installed();
+    const file = filedef.default_installed;
     fs.writeFileSync(fold + "/installed.json", JSON.stringify(file));
 }
 function ensure_file() {

@@ -19,30 +19,20 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.add_as_installed = exports.check_if_installed = exports.unify_indexes = exports.release_compatible = exports.get_desired_release = exports.names_to_objects = exports.read_installed_json = exports.get_total_downloads = exports.locator_to_package = exports.locator_to_release = exports.InstalledLocator = exports.Locator = exports.Repository = exports.Package = exports.Release = void 0;
+exports.add_as_installed = exports.check_if_installed = exports.unify_indexes = exports.release_compatible = exports.get_desired_release = exports.names_to_objects = exports.read_installed_json = exports.get_total_downloads = exports.locator_to_package = exports.locator_to_release = exports.InstalledLocator = exports.Locator = void 0;
 const fs = __importStar(require("fs"));
 const util = __importStar(require("./util"));
-const filedef = __importStar(require("./filedef"));
 var prompt = require('prompt-sync')();
-class Release {
-}
-exports.Release = Release;
-class Package {
-    constructor(name, description, releases, repository) {
-        this.name = name;
-        this.description = description;
-        this.releases = releases;
-        this.repository = repository;
-    }
-}
-exports.Package = Package;
-class Repository {
-    constructor(url, api_type) {
-        this.url = url;
-        this.api_type = api_type;
-    }
-}
-exports.Repository = Repository;
+// export class Release {
+// }
+// export class Package {
+//     // constructor(name: string, description: string, releases: Array<Release>, repository: string) {
+//     //     this.name = name;
+//     //     this.description = description;
+//     //     this.releases = releases;
+//     //     this.repository = repository;
+//     // }
+// }
 class Locator {
     constructor(repo, slug, rel_id) {
         this.repo = repo;
@@ -69,8 +59,9 @@ class InstalledLocator extends Locator {
     }
 }
 exports.InstalledLocator = InstalledLocator;
-function locator_to_release(locator, known_packages) {
+function locator_to_release(ldata, known_packages) {
     // util.print_debug([locator.repo])
+    let locator = new Locator(ldata.repo, ldata.slug, ldata.rel_id);
     known_packages = known_packages.filter((pkg) => { return pkg.repository == locator.repo; });
     if (known_packages.length == 0) {
         util.print_error(`Repository ${locator.repo} not found`);
@@ -92,16 +83,16 @@ function locator_to_release(locator, known_packages) {
     return rel;
 }
 exports.locator_to_release = locator_to_release;
-function locator_to_package(locator, known_packages) {
+function locator_to_package(ldata, known_packages) {
     // util.print_debug([locator.short_slug, locator.repo])
-    known_packages = known_packages.filter((pkg) => { return pkg.repository == locator.repo; });
+    known_packages = known_packages.filter((pkg) => { return pkg.repository == ldata.repo; });
     if (known_packages.length == 0) {
-        util.print_error(`Repository ${locator.repo} not found`);
+        util.print_error(`Repository ${ldata.repo} not found`);
         process.exit();
     }
-    known_packages = known_packages.filter((pkg) => { return pkg.slug == locator.slug; });
+    known_packages = known_packages.filter((pkg) => { return pkg.slug == ldata.slug; });
     if (known_packages.length == 0) {
-        util.print_error(`Package ${locator.repo}->${locator.slug} not found`);
+        util.print_error(`Package ${ldata.repo}->${ldata.slug} not found`);
         process.exit();
     }
     return known_packages[0];
@@ -126,7 +117,7 @@ function read_installed_json(fold) {
         json = JSON.parse(file);
     }
     catch (err) {
-        json = new filedef.installed();
+        json;
     }
     return json;
 }
@@ -214,12 +205,12 @@ exports.check_if_installed = check_if_installed;
 function add_as_installed(release, fold, known_packages) {
     let file = read_installed_json(fold);
     let locator = Locator.from_short_slug(release.parent_locator);
-    if (!(file.locators.map(loc => loc.short_slug).includes(locator.short_slug))) {
+    if (!(file.locators.map(loc => loc.repo + loc.slug).includes(locator.repo + locator.slug))) {
         let installed_locator = new InstalledLocator(locator.repo, locator.slug, locator.rel_id, Date.now());
         file.locators.push(installed_locator);
     }
     else {
-        let idx = file.locators.findIndex(loc => loc.short_slug == locator.short_slug);
+        let idx = file.locators.findIndex(loc => loc.repo + loc.slug == locator.repo + locator.slug);
         file.locators[idx].updated = Date.now(); // update last checked
     }
     fs.writeFileSync(fold + "/installed.json", JSON.stringify(file));

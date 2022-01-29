@@ -1,5 +1,6 @@
 let prmpt = require("prompt-sync")({ sigint: true });
 import * as packages from "./package"
+import * as interfaces from "./interfaces"
 import * as xmlhpr from "xmlhttprequest"
 
 export const possible_options = ["install", "remove", "sync", "update", "search", "list", "list_all", "help", "add_repo", "remove_repo"];
@@ -55,7 +56,7 @@ export function print_debug(text: any) {
 	console.log(`${colors.BgYellowBright + colors.FgBlack}[DEBUG]${colors.Reset + colors.Dim} ${text}${colors.Reset}`);
 }
 
-export function print_release(release: packages.Release, known_packages: Array<packages.Package>): void {
+export function print_release(release: interfaces.ReleaseData, known_packages: Array<interfaces.PackageData>): void {
     let a = packages.locator_to_package(packages.Locator.from_short_slug(release.parent_locator), known_packages);
 	if(release.is_dependency){
 		console.log(`${colors.BgGreen}${colors.FgBlack}[Dependency]${colors.Reset} ${a.name} version ${release.version} for Minecraft ${release.game_version}`)
@@ -64,7 +65,7 @@ export function print_release(release: packages.Release, known_packages: Array<p
 	console.log(`${colors.BgGreen}${colors.FgBlack}[Release]${colors.Reset} ${a.name} version ${release.version} for minecraft ${release.game_version}`)
 }
 
-export function print_package(pkg: packages.Package) {
+export function print_package(pkg: interfaces.PackageData) {
 	console.log(`${colors.BgGreen}${colors.FgBlack}[Package]${colors.Reset} ${pkg.name} - ${pkg.description}`);
 	console.log(`| Total Downloads: ${packages.get_total_downloads(pkg)} | Repository: ${pkg.repository}`);
 	console.log(`| Authors: ${pkg.authors.join(", ")}`);
