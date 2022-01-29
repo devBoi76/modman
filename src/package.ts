@@ -6,21 +6,6 @@ import * as filedef from "./filedef"
 import * as interfaces from "./interfaces"
 var prompt = require('prompt-sync')();
 
-// export class Release {
-
-// }
-
-// export class Package {
-
-    
-//     // constructor(name: string, description: string, releases: Array<Release>, repository: string) {
-//     //     this.name = name;
-//     //     this.description = description;
-//     //     this.releases = releases;
-//     //     this.repository = repository;
-//     // }
-// }
-
 export class Locator implements interfaces.LocatorData {
     // The locator is a unique locator to a specific package version
     // It contains the full URL of the repository, so that it can be resolved even if someone hasn't added that repository

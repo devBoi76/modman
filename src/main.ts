@@ -152,33 +152,6 @@ async function main(){
 			api.remove_repo(parsed_args.words[0])
 			break;
 		}
-		case "create_package": {
-			if(parsed_args.words.length != 3) {
-				util.print_error("Please provide a name and description for the package in the following format:");
-				util.print_error("`create_package <repository_url> <name> <description>`")
-				process.exit();
-			}
-			api.create_package(parsed_args.words[0], parsed_args.words[1], parsed_args.words[2]);
-			break;
-		}
-		case "create_release": {
-			if(parsed_args.words.length != 5) {
-				util.print_error("Please provide a name and description for the release in the following format:");
-				util.print_error("`create_package <repository_url> <release_version> <game_version> <dependencies> <repository_package_id>`")
-				process.exit();
-			}
-			api.create_release(parsed_args.words[0], parsed_args.words[1], parsed_args.words[2], parsed_args.words[3], parsed_args.words[4]);
-			break;
-		}
-		case "upload_release": {
-			if(parsed_args.words.length != 4) {
-				util.print_error("Please provide a name and description for the release file in the following format:");
-				util.print_error("`create_package <repository_url> <file_path> <repository_package_id> <release_id>`")
-				process.exit();
-			}
-			api.upload_release_file(parsed_args.words[0], parsed_args.words[1], parsed_args.words[2], parsed_args.words[3]);
-			break;
-		}
 		case "help": {
 			util.get_help()
 			break;

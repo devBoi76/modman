@@ -23,16 +23,6 @@ exports.add_as_installed = exports.check_if_installed = exports.unify_indexes = 
 const fs = __importStar(require("fs"));
 const util = __importStar(require("./util"));
 var prompt = require('prompt-sync')();
-// export class Release {
-// }
-// export class Package {
-//     // constructor(name: string, description: string, releases: Array<Release>, repository: string) {
-//     //     this.name = name;
-//     //     this.description = description;
-//     //     this.releases = releases;
-//     //     this.repository = repository;
-//     // }
-// }
 class Locator {
     constructor(repo, slug, rel_id) {
         this.repo = repo;
